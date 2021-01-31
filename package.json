@@ -1,0 +1,22 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "lite-server --baseDir=\"src\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LEDTisch/frontend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LEDTisch/frontend/issues"
+  },
+  "homepage": "https://github.com/LEDTisch/frontend#readme",
+  "dependencies": {
+    "lite-server": "^2.6.1"
+  }
+}
