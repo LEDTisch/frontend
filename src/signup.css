@@ -12,6 +12,7 @@ body{
     left: 50%;
     transform: translate(-50%, -50%);
     background: #191919;
+    background-color: hsla(0, 0%, 10%, 0.75);
     text-align: center;
     border-radius: 25px;
 
@@ -36,7 +37,7 @@ body{
     transition: 0.25s;
 }
 .signupform input[type = "text"]:focus,.signupform input[type = "password"]:focus,.signupform input[type = "email"]:focus{
-    width: 280px;
+    width: 230px;
     border-color: #2ecc71;
 }
 .signupform input[type = "submit"]{
