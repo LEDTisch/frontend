@@ -1,11 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="signin.css">
+
     <title>SignIn</title>
 </head>
 <body>
-    
+    <form class="signinform" id="signupfor">
+        <h1>Login</h1>
+        <input type="text" placeholder="E-mail/Name" id="email_name_input"></input>
+
+        <input type="password" placeholder="Passwort" id="passwordinput"></input>
+
+        <input type="submit" form="signupform" id="submitButton" value="Login"></input>
+
+    </form>
+
+<script src="constants.js"></script>    
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="signup.js"></script>
+
 </body>
 </html>
