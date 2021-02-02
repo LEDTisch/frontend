@@ -3,7 +3,6 @@ const passwordinput = document.getElementById("passwordinput");
 const signupButton = document.getElementById("submitButton");
 
 signupButton.onclick = function(e) {
-    console.log($("#signinfor").serialize())
     
     const url = `${window.API}/auth/signin?eorn=${email_name_input.value}&password=${passwordinput.value}`;
     console.log(url);
