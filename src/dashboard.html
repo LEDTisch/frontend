@@ -4,9 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
-    <a href="./signout.html">Abmelden</a>
+    <header>
+        <nav>
+            <ul class="menubar">
+                <li><a href="#" id="settings">Einstellungen</a></li>
+                <li><a href="#" id="devices">Devices</a></li>
+                <li><a href="#" id="appdata">App Daten</a></li>
+            </ul>
+        </nav>
+        <a href="signout.html"><button id="logout">Ausloggen</button></a>
+    </header>
+
+    <ul class="verticalMenu">
+        <li><a class="active" id="home">Home</a></li>
+        <li><a id="news" >News</a></li>
+        <li><a id="contact">Contact</a></li>
+        <li><a id="about">About</a></li>
+      </ul>
+  
+
+      <ul class="verticalMenu secoundary">
+        <li><a class="active" id="home">Home</a></li>
+        <li><a id="news" >Test</a></li>
+        <li><a id="contact">Contact</a></li>
+        <li><a id="about">About</a></li>
+      </ul>
 
     <script src="./constants.js"></script>
     <script src="./dashboard.js"></script>

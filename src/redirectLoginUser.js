@@ -1,6 +1,4 @@
-//TODO check if valid session cookie is present than redirect to dashboard to prevent to login a logedin user
 
- 
 if(window.readCookie("session")!='') {
 
 const url = `${window.API}/auth/validateSession?session=${window.readCookie("session")}`;
