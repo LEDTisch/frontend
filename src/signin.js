@@ -5,11 +5,18 @@ const signupButton = document.getElementById("submitButton");
 signupButton.onclick = function(e) {
     console.log($("#signinfor").serialize())
     
-    const url = `${window.API}/signin?name_email=${email_name_input.value}&password=${passwordinput.value}`;
+    const url = `${window.API}/auth/signin?eorn=${email_name_input.value}&password=${passwordinput.value}`;
     console.log(url);
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", url, false ); // false for synchronous request
     xmlHttp.send( null );
     console.log(xmlHttp.responseText);
+
+    if(!JSON.parse(xmlHttp.responseText).error) {
+        window.createCookie("session", JSON.parse(xmlHttp.responseText).session,1);
+        window.location.replace("dashboard.html");
+        }else{
+            //TODO handle Error
+        }
     
     }

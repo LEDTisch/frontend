@@ -52,7 +52,6 @@ body{
     color: white;
     border-radius: 24px;
     transition: 0.25s;
-    cursor: pointer;
 }
 .signinform input[type = "submit"]:hover{
     background: #2ecc71;
