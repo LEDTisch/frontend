@@ -85,8 +85,11 @@ button.innerText="Hinzufügen"
 div.insertAdjacentElement('beforeend',ti);
 div.insertAdjacentElement('beforeend',button);
 subnavsecoundary.insertAdjacentElement('beforeend',div);
-
+button.onclick = (e) => {
+console.log("add");
 }
+}
+
 
 
 settings.onclick = (e) => {

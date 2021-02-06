@@ -95,13 +95,12 @@ header{
     color: white;
   }
 #scorenamediv{
-    display: flex;
+    display: inline-block;
     justify-content: space-between;
 }
 #buttonaddscore{
     border:0;
     background: none;
-    display: block;
     text-align: center;
     border: 2px solid #2ecc71;
     padding: 3px 2px;
@@ -118,14 +117,12 @@ header{
 #scorenameinput{
     border:0;
     background: none;
-    display: block;
     border: 2px solid #3498db;
     padding: 3px 2px;
     width: auto;
     outline: none;
     color: white;
     border-radius: 10px;
-    transition: 0.25s;
     margin: 6px;
 
   }
