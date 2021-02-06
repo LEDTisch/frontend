@@ -27,6 +27,8 @@ const home = document.getElementById("home")
 var state="None";
 
 
+var lastLoadingAnimation;
+
 
 $(document).on('click', '.menubar > li', function (e) {
                 $('a.activeLink').removeClass('activeLink');
@@ -45,8 +47,14 @@ $(document).on('click', '.verticalMenu > li', function (e) {
 
 
     if(state=="AppDaten"){
-        generateSubNavSecoundaryAppData();
+        $(".currentLoading").hide();
+        $(".currentLoading").removeClass("currentLoading")
 
+        $(this).children('a').children("img").addClass("currentLoading");
+        $(this).children('a').children("img")[0].style.display ="block"
+        lastLoadingAnimation = $(this).children('a').children("img")[0];
+        generateSubNavSecoundaryAppData();
+   
         
     }
     subnavsecoundary.style.display = "block";
@@ -76,22 +84,35 @@ subnavsecoundary.innerHTML="";
 
 const url =window.API+"/app/listinstalled?session="+window.readCookie("session");
 var xmlHttp = new XMLHttpRequest();
-xmlHttp.open( "GET", url, false ); 
+xmlHttp.open( "GET", url, true ); 
 xmlHttp.send( null );
-
-const data = JSON.parse(xmlHttp.responseText)
-appdataInstalledApps = data;
-
-for(var i=0;i<data.list.length;i++){
-console.log(data.list[i].name);
-
-
-const li = document.createElement("li");
-const a = document.createElement("a");
-a.innerText = data.list[i].name;
-li.insertAdjacentElement('beforeend',a);
-subnavprimary.insertAdjacentElement('beforeend',li);
-
+xmlHttp.onload = function() {
+    const data = JSON.parse(xmlHttp.responseText)
+    appdataInstalledApps = data;
+    
+    for(var i=0;i<data.list.length;i++){
+    console.log(data.list[i].name);
+    
+    
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    const img = document.createElement("img");
+    img.src = "loading.svg";
+    img.width = 20;
+    img.height = 20;
+    img.style.marginBottom = "-4px";
+    img.style.float = "right";
+    img.class = "loadingAni"
+    img.style.display = "none";
+    a.innerText = data.list[i].name;
+    li.insertAdjacentElement('beforeend',a);
+    a.insertAdjacentElement('beforeend',img);
+    subnavprimary.insertAdjacentElement('beforeend',li);
+    
+    
+    }
+    
+    
 }
 
 
@@ -112,29 +133,42 @@ settings.onclick = (e) => {
 
 }
 
-function generateSubNavSecoundaryAppData() {
+ function generateSubNavSecoundaryAppData() {
     const url=window.API+"/app/getAppScores?session="+window.readCookie("session")+"&appuuid="+appdataInstalledApps.list[primarySelectionIndex].UUID;
     var xmlHttp_getScores=new XMLHttpRequest();
-    xmlHttp_getScores.open( "GET", url, false);
+    xmlHttp_getScores.open( "GET", url, true);
     xmlHttp_getScores.send(null);
+    subnavsecoundary.innerHTML="";
+    subnavsecoundary.style.display = "none";
+
+
+xmlHttp_getScores.onload = function() {
     subnavsecoundary.innerHTML="";
     generateCreateNew();
     const d=JSON.parse(xmlHttp_getScores.responseText);
     for(var i=0;i<d.write.length;i++){//write auflisten permission
-        const li = document.createElement("li");
-        const a = document.createElement("a");
-        a.innerText = d.write[i].name;
-        li.insertAdjacentElement('beforeend',a);
-        subnavsecoundary.insertAdjacentElement('beforeend',li);
+        generateSecoundary(d.write[i].name)
+        
     }
 
     for(var i=0;i<d.read.length;i++){//write auflisten permission
-        const li = document.createElement("li");
-        const a = document.createElement("a");
-        a.innerText = d.read[i].name;
-        li.insertAdjacentElement('beforeend',a);
-        subnavsecoundary.insertAdjacentElement('beforeend',li);
+        generateSecoundary(d.read[i].name)
+        
     }
+    subnavsecoundary.style.display = "block";
+    lastLoadingAnimation.style.display = "none";
+
+
+}
+
+}
+
+function generateSecoundary(content) {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.innerText = content;
+    li.insertAdjacentElement('beforeend',a);
+    subnavsecoundary.insertAdjacentElement('beforeend',li);
 }
 
 function generateCreateNew() {
