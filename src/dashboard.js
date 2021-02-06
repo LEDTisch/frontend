@@ -25,6 +25,7 @@ const appdata = document.getElementById("appdata");
 const settings = document.getElementById("settings");
 const devices = document.getElementById("devices")
 const home = document.getElementById("home")
+const configblock = document.getElementById("config");
 var state="None";
 
 
@@ -245,16 +246,73 @@ devices.onclick  = (e) => {
 
 function loadAppConfig() {
     var load_url =window.API+"/app/getScoreConfig?session="+window.readCookie("session")+"&scoreuuid="+appdataCurrentScores[secoundarySelectionIndex-1].uuid;
-
+    
     var xmlHttp_load = new XMLHttpRequest();
     xmlHttp_load.open( "GET", load_url, true );
     xmlHttp_load.onload = function()  {
 
-        console.log(xmlHttp_load.responseText);
+        console.log(appdataInstalledApps.list[primarySelectionIndex]);
         lastLoadingAnimationSecoundary.style.display = "none"
+        var data=appdataInstalledApps.list[primarySelectionIndex].config.settings;
+        configblock.innerHTML="";
+        for(var i=0;i<data.length;i++){
+            console.log(data[i].type);
+            if(data[i].type=="integer"){
+                createParam_Integgier(data[i].default,data[i].displayname);
+            }
+            if(data[i].type=="color"){
+                createParam_color(data[i].default,data[i].displayname);
+            }
+
+
+        }
+
+
     }
     
     xmlHttp_load.send( null );
     
+
+}
+function createParam_Integer(defaultparam,displayname){
+    const div=document.createElement("div");
+    const diname=document.createElement("p");
+    const input=document.createElement("input");
+
+    div.class="param"
+
+    diname.innerText=displayname;
+    diname.class="displaynametext";
+
+    input.type="number"
+    input.class="integerinput"
+    input.placeholder=defaultparam
+
+
+    div.insertAdjacentElement('beforeend',diname);
+    div.insertAdjacentElement('beforeend',input);
+
+    configblock.insertAdjacentElement('beforeend',div)
+
+}
+function createParam_color(currentParam,displayname){
+    const div=document.createElement("div");
+    const diname=document.createElement("p");
+    const input=document.createElement("input");
+
+    div.class="param"
+
+    diname.innerText=displayname;
+    diname.class="displaynametext";
+
+    input.type="color"
+    input.class="colorinput"
+  
+
+
+    div.insertAdjacentElement('beforeend',diname);
+    div.insertAdjacentElement('beforeend',input);
+
+    configblock.insertAdjacentElement('beforeend',div)
 
 }
