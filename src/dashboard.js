@@ -15,8 +15,9 @@ if(window.readCookie("session")=='') {
     }
 
 var primarySelectionIndex = -1;
-
+var secoundarySelectionIndex = -1;
 var appdataInstalledApps;
+var appdataCurrentScores;
 
 const subnavprimary = document.getElementById("subnavprimary");
 const subnavsecoundary = document.getElementById("subnavsecoundary")
@@ -28,7 +29,7 @@ var state="None";
 
 
 var lastLoadingAnimation;
-
+var lastLoadingAnimationSecoundary;
 
 $(document).on('click', '.menubar > li', function (e) {
                 $('a.activeLink').removeClass('activeLink');
@@ -47,10 +48,10 @@ $(document).on('click', '.verticalMenu > li', function (e) {
 
 
     if(state=="AppDaten"){
-        $(".currentLoading").hide();
-        $(".currentLoading").removeClass("currentLoading")
+        $(".currentLoadingPrimary").hide();
+        $(".currentLoadingPrimary").removeClass("currentLoadingPrimary")
 
-        $(this).children('a').children("img").addClass("currentLoading");
+        $(this).children('a').children("img").addClass("currentLoadingPrimary");
         $(this).children('a').children("img")[0].style.display ="block"
         lastLoadingAnimation = $(this).children('a').children("img")[0];
         generateSubNavSecoundaryAppData();
@@ -58,6 +59,24 @@ $(document).on('click', '.verticalMenu > li', function (e) {
         
     }
     subnavsecoundary.style.display = "block";
+
+}else{
+
+    secoundarySelectionIndex = $(this).parent().children(' li ').children('.activeSubNav').parent().index();
+
+  if(state=="AppDaten"){
+        $(".currentLoading").hide();
+        $(".currentLoading").removeClass("currentLoading")
+
+        $(this).children('a').children("img").addClass("currentLoading");
+        $(this).children('a').children("img")[0].style.display ="block"
+        lastLoadingAnimationSecoundary = $(this).children('a').children("img")[0]
+
+        loadAppConfig();
+
+
+        
+    }
 
 }
 
@@ -146,6 +165,7 @@ xmlHttp_getScores.onload = function() {
     subnavsecoundary.innerHTML="";
     generateCreateNew();
     const d=JSON.parse(xmlHttp_getScores.responseText);
+   
     for(var i=0;i<d.write.length;i++){//write auflisten permission
         generateSecoundary(d.write[i].name)
         
@@ -159,6 +179,8 @@ xmlHttp_getScores.onload = function() {
     lastLoadingAnimation.style.display = "none";
 
 
+    appdataCurrentScores = d.write.concat(d.read);
+
 }
 
 }
@@ -167,6 +189,16 @@ function generateSecoundary(content) {
     const li = document.createElement("li");
     const a = document.createElement("a");
     a.innerText = content;
+
+    const img = document.createElement("img");
+    img.src = "loading.svg";
+    img.width = 20;
+    img.height = 20;
+    img.style.marginBottom = "-4px";
+    img.style.float = "right";
+    img.class = "loadingAni"
+    img.style.display = "none";
+    a.insertAdjacentElement('beforeend',img);
     li.insertAdjacentElement('beforeend',a);
     subnavsecoundary.insertAdjacentElement('beforeend',li);
 }
@@ -208,5 +240,21 @@ devices.onclick  = (e) => {
     subnavprimary.style.display = "none";
     subnavsecoundary.style.display = "none";
 
+
+}
+
+function loadAppConfig() {
+    var load_url =window.API+"/app/getScoreConfig?session="+window.readCookie("session")+"&scoreuuid="+appdataCurrentScores[secoundarySelectionIndex-1].uuid;
+
+    var xmlHttp_load = new XMLHttpRequest();
+    xmlHttp_load.open( "GET", load_url, true );
+    xmlHttp_load.onload = function()  {
+
+        console.log(xmlHttp_load.responseText);
+        lastLoadingAnimationSecoundary.style.display = "none"
+    }
+    
+    xmlHttp_load.send( null );
+    
 
 }
