@@ -73,6 +73,19 @@ li.insertAdjacentElement('beforeend',a);
 subnavprimary.insertAdjacentElement('beforeend',li);
 
 }
+const div=document.createElement("div");
+const ti=document.createElement("input");
+const button=document.createElement("button");
+div.id="scorenamediv"
+ti.type="text"
+ti.id="scorenameinput"
+ti.placeholder="Name"
+button.id="buttonaddscore"
+button.innerText="Hinzufügen"
+div.insertAdjacentElement('beforeend',ti);
+div.insertAdjacentElement('beforeend',button);
+subnavsecoundary.insertAdjacentElement('beforeend',div);
+
 }
 
 
