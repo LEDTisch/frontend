@@ -68,7 +68,6 @@ header{
     background-color: var(--secoundryColor);
     position: fixed;
     height: 100%;
-    overflow: auto;
   }
 
   .secoundary {
@@ -119,7 +118,8 @@ header{
     background: none;
     border: 2px solid #3498db;
     padding: 3px 2px;
-    width: auto;
+    width: fit-content;
+    max-width: fit-content;
     outline: none;
     color: white;
     border-radius: 10px;
