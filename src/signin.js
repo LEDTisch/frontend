@@ -15,7 +15,7 @@ signupButton.onclick = function(e) {
         window.createCookie("session", JSON.parse(xmlHttp.responseText).session,1);
         window.location.replace("dashboard.html");
         }else{
-            //TODO handle Error
+            errorlable.innerHTML = JSON.parse(xmlHttp.responseText).error;
         }
     
     }

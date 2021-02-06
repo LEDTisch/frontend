@@ -5,13 +5,15 @@
     
     outline: 0 none;
 }
-:root {
---secoundryColor:  #212225;
-}
-body {
+
+body{
     background-color: #24252A;
 }
-.menubar li, li>a, #logout{
+:root {
+    --secoundryColor:  #212225;
+}
+
+.menubar li, li>a, #signin, #signup{
     font-family: sans-serif;
     font-weight: 500;
     font-size: 16px;
@@ -29,7 +31,6 @@ header{
 
 .menubar{
     list-style: none;
-  
 }
 .menubar li {
     display: inline-block;
@@ -41,7 +42,19 @@ header{
 .menubar li a:hover{
     color: #0088a9;
 }
-#logout{
+#signin{
+    padding: 9px 25px;
+    background-color: rgba(0,136, 169,1);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+
+}
+#signin:hover{
+    background-color:  rgba(50,136, 250,1);
+}
+#signup{
     padding: 9px 25px;
     background-color: rgba(0,136, 169,1);
     border: none;
@@ -49,48 +62,6 @@ header{
     cursor: pointer;
     transition: all 0.3s ease 0s;
 }
-#logout:hover{
+#signup:hover{
     background-color:  rgba(50,136, 250,1);
 }
-
-.activeLink {
-
-    color: #0d9fc4;
-
-}
-
-
-.verticalMenu {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    width: 15%;
-    background-color: var(--secoundryColor);
-    position: fixed;
-    height: 100%;
-    overflow: auto;
-  }
-
-  .secoundary {
-      margin-left: 15.15%;
-  }
-
-
-  
-.verticalMenu li a {
-    display: block;
-    color: #edf0f1;
-    padding: 20px 20px;    
-    text-decoration: none;
-    
-  }
-  
-  .verticalMenu li a.activeSubNav {
-    background-color: rgba(0,136, 169,1);
-    color: #edf0f1;
-  }
-  
-  .verticalMenu li a:hover:not(.activeSubNav) {
-    background-color: rgb(23, 90, 107);
-    color: white;
-  }

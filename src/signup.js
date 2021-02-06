@@ -2,7 +2,7 @@ const signupButton = document.getElementById("submitButton");
 const nameinput = document.getElementById("usernameinput");
 const emailinput = document.getElementById("emailinput");
 const passwordinput = document.getElementById("passwordinput");
-
+const errorlable = document.getElementById("errorlable");
 signupButton.onclick = function(e) {
 console.log($("#signupfor").serialize())
 
@@ -16,7 +16,9 @@ if(!JSON.parse(xmlHttp.responseText).error) {
 window.createCookie("session", JSON.parse(xmlHttp.responseText).session,1);
 window.location.replace("dashboard.html");
 }else{
-    //TODO handle Error
+    
+errorlable.innerHTML = JSON.parse(xmlHttp.responseText).error;
+    
 }
 
 }
