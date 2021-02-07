@@ -276,6 +276,9 @@ function loadAppConfig() {
             if(data[i].type=="text"){
                 createParam_Text(currentConfig,data[i].displayname);
             }
+            if(data[i].type=="switch"){
+                createParam_switch(currentConfig,data[i].displayname);
+            }
 
 
         }
@@ -345,6 +348,29 @@ function createParam_color(currentParam,displayname){
 
     div.insertAdjacentElement('beforeend',diname);
     div.insertAdjacentElement('beforeend',input);
+
+    configblock.insertAdjacentElement('beforeend',div)
+}
+function createParam_switch(currentParam,displayname){
+    const div=document.createElement("div");
+    const diname=document.createElement("p");
+
+    const toggle=document.createElement("div");
+
+
+    div.class="checkbox-container"
+
+    diname.innerText=displayname;
+    diname.class="displaynametext";
+
+
+
+    toggle.innerHTML='<label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>'
+  
+
+
+    div.insertAdjacentElement('beforeend',diname);
+    div.insertAdjacentElement('beforeend',toggle);
 
     configblock.insertAdjacentElement('beforeend',div)
 }
