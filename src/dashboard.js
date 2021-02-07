@@ -266,7 +266,7 @@ function loadAppConfig() {
         
         for(var i=0;i<data.length;i++){
             var currentConfig
-            if(currentUserAppData.config[data[i].targetName]){
+            if(currentUserAppData.config[data[i].targetName]!=undefined){
                  currentConfig = currentUserAppData.config[data[i].targetName];
             }else{
                 currentConfig = data[i].default;
@@ -281,7 +281,7 @@ function loadAppConfig() {
                 createParam_Text(currentConfig,data[i].displayname,data[i].targetName);
             }
             if(data[i].type=="switch"){
-                createParam_switch(currentConfig,data[i].displayname);
+                createParam_switch(currentConfig,data[i].displayname,data[i].targetName);
             }
 
 
@@ -368,7 +368,7 @@ function createParam_color(currentParam,displayname,targetname){
     configblock.insertAdjacentElement('beforeend',div)
 
 }
-function createParam_switch(currentParam,displayname){
+function createParam_switch(currentParam,displayname,targetname){
     const div=document.createElement("div");
     const diname=document.createElement("p");
 
@@ -380,10 +380,13 @@ function createParam_switch(currentParam,displayname){
     diname.innerText=displayname;
     diname.class="displaynametext";
 
-
-
     toggle.innerHTML='<label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>'
   
+    toggle.childNodes[0].childNodes[0].checked = currentParam;
+
+    toggle.childNodes[0].childNodes[0].onchange = function() {
+        currentUserAppData.config[targetname] =toggle.childNodes[0].childNodes[0].checked;
+    }
 
 
     div.insertAdjacentElement('beforeend',diname);
