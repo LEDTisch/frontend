@@ -245,6 +245,7 @@ devices.onclick  = (e) => {
 
 
 var currentUserAppData;
+var currentParamContainer;
 function loadAppConfig() {
 
     configblock.innerHTML="";
@@ -271,19 +272,32 @@ function loadAppConfig() {
             }else{
                 currentConfig = data[i].default;
             }
+
+
+          
+             currentParamContainer = document.createElement("div");
+             currentParamContainer.classList.add("paramContainer")  
+            
+
+            createParamName(data[i].displayname);
+
+
             if(data[i].type=="integer"){
-                createParam_Integer(currentConfig,data[i].displayname,data[i].targetName);
+                createParam_Integer(currentConfig,data[i].targetName);
             }
             if(data[i].type=="color"){
-                createParam_color(currentConfig,data[i].displayname,data[i].targetName);
+                createParam_color(currentConfig,data[i].targetName);
             }
             if(data[i].type=="text"){
-                createParam_Text(currentConfig,data[i].displayname,data[i].targetName);
+                createParam_Text(currentConfig,data[i].targetName);
             }
             if(data[i].type=="switch"){
-                createParam_switch(currentConfig,data[i].displayname,data[i].targetName);
+                createParam_switch(currentConfig,data[i].targetName);
             }
 
+            createParamDescription(data[i].description);
+
+            configblock.insertAdjacentElement('beforeend',currentParamContainer);
 
         }
 
@@ -296,15 +310,37 @@ function loadAppConfig() {
     
 
 }
-function createParam_Text(defaultparam,displayname,targetname){
+
+function createParamName(text) {
+
+    const ptag = document.createElement("p");
+    ptag.innerText = text;
+    ptag.classList.add("paramname");
+    
+    currentParamContainer.insertAdjacentElement('beforeend',ptag)
+
+}
+
+function createParamDescription(text) {
+
+    const ptag = document.createElement("p");
+
+
+    ptag.innerText = text;
+    ptag.classList.add("paramdescription");
+    
+    currentParamContainer.insertAdjacentElement('beforeend',ptag)
+
+}
+
+
+function createParam_Text(defaultparam,targetname){
     const div=document.createElement("div");
-    const diname=document.createElement("p");
     const input=document.createElement("input");
 
     div.class="param"
 
-    diname.innerText=displayname;
-    diname.class="displaynametext";
+
 
     input.type="text"
     input.class="integerinput"
@@ -314,21 +350,15 @@ function createParam_Text(defaultparam,displayname,targetname){
     }
 
 
-    div.insertAdjacentElement('beforeend',diname);
     div.insertAdjacentElement('beforeend',input);
 
-    configblock.insertAdjacentElement('beforeend',div)
+    currentParamContainer.insertAdjacentElement('beforeend',div)
 }
-function createParam_Integer(defaultparam,displayname,targetname){
+function createParam_Integer(defaultparam,targetname){
     const div=document.createElement("div");
-    const diname=document.createElement("p");
     const input=document.createElement("input");
 
     div.class="param"
-
-    diname.innerText=displayname;
-    diname.class="displaynametext";
-
     input.type="number"
     input.class="integerinput"
     input.value=defaultparam
@@ -338,20 +368,17 @@ function createParam_Integer(defaultparam,displayname,targetname){
 
 
 
-    div.insertAdjacentElement('beforeend',diname);
     div.insertAdjacentElement('beforeend',input);
 
-    configblock.insertAdjacentElement('beforeend',div)
+    currentParamContainer.insertAdjacentElement('beforeend',div)
 }
-function createParam_color(currentParam,displayname,targetname){
+function createParam_color(currentParam,targetname){
     const div=document.createElement("div");
-    const diname=document.createElement("p");
     const input=document.createElement("input");
 
     div.class="param"
 
-    diname.innerText=displayname;
-    diname.class="displaynametext";
+
 
     input.type="color"
     input.class="colorinput"
@@ -362,23 +389,17 @@ function createParam_color(currentParam,displayname,targetname){
     }
 
 
-    div.insertAdjacentElement('beforeend',diname);
     div.insertAdjacentElement('beforeend',input);
 
-    configblock.insertAdjacentElement('beforeend',div)
+    currentParamContainer.insertAdjacentElement('beforeend',div)
 
 }
-function createParam_switch(currentParam,displayname,targetname){
+function createParam_switch(currentParam,targetname){
     const div=document.createElement("div");
-    const diname=document.createElement("p");
 
     const toggle=document.createElement("div");
 
-
     div.class="checkbox-container"
-
-    diname.innerText=displayname;
-    diname.class="displaynametext";
 
     toggle.innerHTML='<label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>'
   
@@ -389,16 +410,16 @@ function createParam_switch(currentParam,displayname,targetname){
     }
 
 
-    div.insertAdjacentElement('beforeend',diname);
     div.insertAdjacentElement('beforeend',toggle);
 
-    configblock.insertAdjacentElement('beforeend',div)
+    currentParamContainer.insertAdjacentElement('beforeend',div)
 }
 
 
 function generateApplyButtonForScore() {
     const apply =  document.createElement("button");
     apply.innerText = "Anwenden";
+    apply.class = "applyScore";
     apply.onclick = function() {
 
         console.log(JSON.stringify(currentUserAppData.config))

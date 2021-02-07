@@ -63,3 +63,63 @@
   .slider.round:before {
     border-radius: 50%;
   }
+
+
+
+
+
+  /* Params */
+
+  .paramContainer {
+    justify-content: space-between;
+
+      margin-bottom: 60px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 10px;
+      width: 100%;
+    
+
+  }
+
+  .paramContainer > *{
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+
+    
+
+  }
+
+  .paramContainer > *:not(.paramname):not(.paramdescription) {
+
+    right: 30%;
+
+    margin-bottom: 15px;
+    white-space: nowrap;
+ 
+
+  }
+
+
+
+  .paramname {
+
+    font-size: 20px;
+font-weight: bold;
+    float: left;
+    margin-left: 25%;
+    margin-right: 30%;
+  }
+
+  .paramdescription {
+    float: left;
+    margin-top: 0px;
+    margin-left: 25%;
+    width: fit-content;
+height: fit-content;
+  }
+
+
