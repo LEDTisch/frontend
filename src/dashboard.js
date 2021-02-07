@@ -47,6 +47,7 @@ $(document).on('click', '.verticalMenu > li', function (e) {
     if( $(this).parent().attr('id') == "subnavprimary") {
         primarySelectionIndex = $(this).parent().children(' li ').children('.activeSubNav').parent().index();
 
+        configblock.innerHTML = "";
 
     if(state=="AppDaten"){
         $(".currentLoadingPrimary").hide();
@@ -111,8 +112,6 @@ xmlHttp.onload = function() {
     appdataInstalledApps = data;
     
     for(var i=0;i<data.list.length;i++){
-    console.log(data.list[i].name);
-    
     
     const li = document.createElement("li");
     const a = document.createElement("a");
@@ -244,7 +243,11 @@ devices.onclick  = (e) => {
 
 }
 
+
+var currentUserAppData;
 function loadAppConfig() {
+
+    configblock.innerHTML="";
     var load_url =window.API+"/app/getScoreConfig?session="+window.readCookie("session")+"&scoreuuid="+appdataCurrentScores[secoundarySelectionIndex-1].uuid;
     
     var xmlHttp_load = new XMLHttpRequest();
@@ -252,29 +255,30 @@ function loadAppConfig() {
     xmlHttp_load.onload = function()  {
         console.log(xmlHttp_load.responseText);
 
-        var userappdata=JSON.parse(xmlHttp_load.responseText);
+        currentUserAppData=JSON.parse(xmlHttp_load.responseText);
 
+        configblock.innerHTML="";
 
 
 
         lastLoadingAnimationSecoundary.style.display = "none"
         var data=appdataInstalledApps.list[primarySelectionIndex].config.settings;
-        configblock.innerHTML="";
+        
         for(var i=0;i<data.length;i++){
             var currentConfig
-            if(userappdata.config[data[i].targetName]){
-                 currentConfig = userappdata.config[data[i].targetName];
+            if(currentUserAppData.config[data[i].targetName]){
+                 currentConfig = currentUserAppData.config[data[i].targetName];
             }else{
                 currentConfig = data[i].default;
             }
             if(data[i].type=="integer"){
-                createParam_Integer(currentConfig,data[i].displayname);
+                createParam_Integer(currentConfig,data[i].displayname,data[i].targetName);
             }
             if(data[i].type=="color"){
-                createParam_color(currentConfig,data[i].displayname);
+                createParam_color(currentConfig,data[i].displayname,data[i].targetName);
             }
             if(data[i].type=="text"){
-                createParam_Text(currentConfig,data[i].displayname);
+                createParam_Text(currentConfig,data[i].displayname,data[i].targetName);
             }
             if(data[i].type=="switch"){
                 createParam_switch(currentConfig,data[i].displayname);
@@ -283,14 +287,16 @@ function loadAppConfig() {
 
         }
 
+   generateApplyButtonForScore();
 
-    }
+
+}
     
     xmlHttp_load.send( null );
     
 
 }
-function createParam_Text(defaultparam,displayname,description){
+function createParam_Text(defaultparam,displayname,targetname){
     const div=document.createElement("div");
     const diname=document.createElement("p");
     const input=document.createElement("input");
@@ -303,6 +309,9 @@ function createParam_Text(defaultparam,displayname,description){
     input.type="text"
     input.class="integerinput"
     input.value=defaultparam
+    input.onchange = function () {
+        currentUserAppData.config[targetname] =input.value;
+    }
 
 
     div.insertAdjacentElement('beforeend',diname);
@@ -310,7 +319,7 @@ function createParam_Text(defaultparam,displayname,description){
 
     configblock.insertAdjacentElement('beforeend',div)
 }
-function createParam_Integer(defaultparam,displayname,description){
+function createParam_Integer(defaultparam,displayname,targetname){
     const div=document.createElement("div");
     const diname=document.createElement("p");
     const input=document.createElement("input");
@@ -323,6 +332,10 @@ function createParam_Integer(defaultparam,displayname,description){
     input.type="number"
     input.class="integerinput"
     input.value=defaultparam
+    input.onchange = function () {
+        currentUserAppData.config[targetname] =input.value;
+    }
+
 
 
     div.insertAdjacentElement('beforeend',diname);
@@ -330,7 +343,7 @@ function createParam_Integer(defaultparam,displayname,description){
 
     configblock.insertAdjacentElement('beforeend',div)
 }
-function createParam_color(currentParam,displayname){
+function createParam_color(currentParam,displayname,targetname){
     const div=document.createElement("div");
     const diname=document.createElement("p");
     const input=document.createElement("input");
@@ -344,12 +357,16 @@ function createParam_color(currentParam,displayname){
     input.class="colorinput"
     input.value = currentParam;
   
+    input.onchange = function () {
+        currentUserAppData.config[targetname] =input.value;
+    }
 
 
     div.insertAdjacentElement('beforeend',diname);
     div.insertAdjacentElement('beforeend',input);
 
     configblock.insertAdjacentElement('beforeend',div)
+
 }
 function createParam_switch(currentParam,displayname){
     const div=document.createElement("div");
@@ -373,4 +390,30 @@ function createParam_switch(currentParam,displayname){
     div.insertAdjacentElement('beforeend',toggle);
 
     configblock.insertAdjacentElement('beforeend',div)
+}
+
+
+function generateApplyButtonForScore() {
+    const apply =  document.createElement("button");
+    apply.innerText = "Anwenden";
+    apply.onclick = function() {
+
+        console.log(JSON.stringify(currentUserAppData.config))
+
+      var save_url =window.API+"/app/saveAppScore?session="+window.readCookie("session")+"&params="+encodeURIComponent(JSON.stringify(currentUserAppData.config))+"&scoreuuid="+appdataCurrentScores[secoundarySelectionIndex-1].uuid;
+
+      var xmlHttp_save = new XMLHttpRequest();
+      xmlHttp_save.open( "GET", save_url, true );
+      xmlHttp_save.onload = function()  {  
+    
+        console.log(xmlHttp_save.responseText)
+    }
+    xmlHttp_save.send( null );
+
+  }
+
+  configblock.insertAdjacentElement('beforeend',apply);
+
+
+
 }
