@@ -250,21 +250,31 @@ function loadAppConfig() {
     var xmlHttp_load = new XMLHttpRequest();
     xmlHttp_load.open( "GET", load_url, true );
     xmlHttp_load.onload = function()  {
+        console.log(xmlHttp_load.responseText);
 
-        console.log(appdataInstalledApps.list[primarySelectionIndex]);
+        var userappdata=JSON.parse(xmlHttp_load.responseText);
+
+
+
+
         lastLoadingAnimationSecoundary.style.display = "none"
         var data=appdataInstalledApps.list[primarySelectionIndex].config.settings;
         configblock.innerHTML="";
         for(var i=0;i<data.length;i++){
-            console.log(data[i].type);
+            var currentConfig
+            if(userappdata.config[data[i].targetName]){
+                 currentConfig = userappdata.config[data[i].targetName];
+            }else{
+                currentConfig = data[i].default;
+            }
             if(data[i].type=="integer"){
-                createParam_Integer(data[i].default,data[i].displayname);
+                createParam_Integer(currentConfig,data[i].displayname);
             }
             if(data[i].type=="color"){
-                createParam_color(data[i].default,data[i].displayname);
+                createParam_color(currentConfig,data[i].displayname);
             }
             if(data[i].type=="text"){
-                createParam_Text(data[i].default,data[i].displayname);
+                createParam_Text(currentConfig,data[i].displayname);
             }
 
 
@@ -277,7 +287,7 @@ function loadAppConfig() {
     
 
 }
-function createParam_Text(defaultparam,displayname){
+function createParam_Text(defaultparam,displayname,description){
     const div=document.createElement("div");
     const diname=document.createElement("p");
     const input=document.createElement("input");
@@ -289,7 +299,7 @@ function createParam_Text(defaultparam,displayname){
 
     input.type="text"
     input.class="integerinput"
-    input.placeholder=defaultparam
+    input.value=defaultparam
 
 
     div.insertAdjacentElement('beforeend',diname);
@@ -297,7 +307,7 @@ function createParam_Text(defaultparam,displayname){
 
     configblock.insertAdjacentElement('beforeend',div)
 }
-function createParam_Integer(defaultparam,displayname){
+function createParam_Integer(defaultparam,displayname,description){
     const div=document.createElement("div");
     const diname=document.createElement("p");
     const input=document.createElement("input");
@@ -309,7 +319,7 @@ function createParam_Integer(defaultparam,displayname){
 
     input.type="number"
     input.class="integerinput"
-    input.placeholder=defaultparam
+    input.value=defaultparam
 
 
     div.insertAdjacentElement('beforeend',diname);
@@ -329,6 +339,7 @@ function createParam_color(currentParam,displayname){
 
     input.type="color"
     input.class="colorinput"
+    input.value = currentParam;
   
 
 
