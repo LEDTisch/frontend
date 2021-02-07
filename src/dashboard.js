@@ -263,6 +263,9 @@ function loadAppConfig() {
             if(data[i].type=="color"){
                 createParam_color(data[i].default,data[i].displayname);
             }
+            if(data[i].type=="text"){
+                createParam_Text(data[i].default,data[i].displayname);
+            }
 
 
         }
@@ -273,6 +276,26 @@ function loadAppConfig() {
     xmlHttp_load.send( null );
     
 
+}
+function createParam_Text(defaultparam,displayname){
+    const div=document.createElement("div");
+    const diname=document.createElement("p");
+    const input=document.createElement("input");
+
+    div.class="param"
+
+    diname.innerText=displayname;
+    diname.class="displaynametext";
+
+    input.type="text"
+    input.class="integerinput"
+    input.placeholder=defaultparam
+
+
+    div.insertAdjacentElement('beforeend',diname);
+    div.insertAdjacentElement('beforeend',input);
+
+    configblock.insertAdjacentElement('beforeend',div)
 }
 function createParam_Integer(defaultparam,displayname){
     const div=document.createElement("div");
@@ -313,5 +336,4 @@ function createParam_color(currentParam,displayname){
     div.insertAdjacentElement('beforeend',input);
 
     configblock.insertAdjacentElement('beforeend',div)
-
 }
