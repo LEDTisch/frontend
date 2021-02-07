@@ -258,7 +258,7 @@ function loadAppConfig() {
         for(var i=0;i<data.length;i++){
             console.log(data[i].type);
             if(data[i].type=="integer"){
-                createParam_Integgier(data[i].default,data[i].displayname);
+                createParam_Integer(data[i].default,data[i].displayname);
             }
             if(data[i].type=="color"){
                 createParam_color(data[i].default,data[i].displayname);
@@ -293,7 +293,6 @@ function createParam_Integer(defaultparam,displayname){
     div.insertAdjacentElement('beforeend',input);
 
     configblock.insertAdjacentElement('beforeend',div)
-
 }
 function createParam_color(currentParam,displayname){
     const div=document.createElement("div");
