@@ -47,6 +47,7 @@ $(document).on('click', '.verticalMenu > li', function (e) {
     if( $(this).parent().attr('id') == "subnavprimary") {
         primarySelectionIndex = $(this).parent().children(' li ').children('.activeSubNav').parent().index();
 
+        configblock.innerHTML = "";
 
     if(state=="AppDaten"){
         $(".currentLoadingPrimary").hide();
@@ -245,6 +246,8 @@ devices.onclick  = (e) => {
 
 var currentUserAppData;
 function loadAppConfig() {
+
+    configblock.innerHTML="";
     var load_url =window.API+"/app/getScoreConfig?session="+window.readCookie("session")+"&scoreuuid="+appdataCurrentScores[secoundarySelectionIndex-1].uuid;
     
     var xmlHttp_load = new XMLHttpRequest();
@@ -254,12 +257,13 @@ function loadAppConfig() {
 
         currentUserAppData=JSON.parse(xmlHttp_load.responseText);
 
+        configblock.innerHTML="";
 
 
 
         lastLoadingAnimationSecoundary.style.display = "none"
         var data=appdataInstalledApps.list[primarySelectionIndex].config.settings;
-        configblock.innerHTML="";
+        
         for(var i=0;i<data.length;i++){
             var currentConfig
             if(currentUserAppData.config[data[i].targetName]){
