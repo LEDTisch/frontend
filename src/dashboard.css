@@ -76,10 +76,19 @@ header{
 
   #config {
       margin-left: 30.15%;
+
+      /*TODO only if user isn't in the home section*/
   }
 
 
   
+#helloUser {
+    margin-top: 4vh;
+    margin-left: -28vw;
+    font-family: sans-serif;
+
+}
+
 .verticalMenu li a {
     display: block;
     color: #edf0f1;

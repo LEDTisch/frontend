@@ -32,10 +32,17 @@ var state="None";
 var lastLoadingAnimation;
 var lastLoadingAnimationSecoundary;
 
+displayHomeSection();
+
 $(document).on('click', '.menubar > li', function (e) {
                 $('a.activeLink').removeClass('activeLink');
                 $(this).children('a').addClass('activeLink');
                 configblock.innerHTML ="";
+                 if(state=="Home") {
+                        
+                    displayHomeSection();
+                }
+
     e.preventDefault();
 });
 
@@ -90,7 +97,7 @@ e.preventDefault();
 home.onclick= (e) => {
 
 
-    state="home"
+    state="Home"
     subnavprimary.style.display = "none";
     subnavsecoundary.style.display = "none";
 
@@ -459,6 +466,46 @@ function generateButtonsForScore() {
 
   configblock.insertAdjacentElement('beforeend',apply);
   configblock.insertAdjacentElement('beforeend',deleteButton);
+
+
+}
+
+function displayHomeSection() {
+
+
+    const hello = document.createElement("h1")
+    hello.id = "helloUser"
+
+    var getAccountInfos =window.API+"/account/info?session="+window.readCookie("session");
+
+    var xmlHttp_accinfo = new XMLHttpRequest();
+    xmlHttp_accinfo.open( "GET", getAccountInfos, true );
+    xmlHttp_accinfo.onload = function()  {  
+      const accInfo =  JSON.parse(xmlHttp_accinfo.responseText);
+      hello.innerText = timegreeting()+" "+accInfo.name+"!";
+  }
+  xmlHttp_accinfo.send( null );
+
+  configblock.insertAdjacentElement('beforeend',hello)
+
+}
+
+
+function timegreeting() {
+const time = new Date();
+const hour = time.getHours();
+
+    if(hour>=11&&hour<17) {
+
+        return "Guten Tag";
+
+    }else if((hour>=17)||(hour<4)){
+        return "Guten Abend";
+
+
+    }else{
+        return "Guten Morgen";
+    }
 
 
 }
