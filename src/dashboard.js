@@ -37,13 +37,6 @@ displayHomeSection();
 $(document).on('click', '.menubar > li', function (e) {
                 $('a.activeLink').removeClass('activeLink');
                 $(this).children('a').addClass('activeLink');
-                configblock.innerHTML ="";
-                 if(state=="Home") {
-                        
-                    displayHomeSection();
-                }
-
-    e.preventDefault();
 });
 
 
@@ -95,16 +88,21 @@ e.preventDefault();
 
 
 home.onclick= (e) => {
+    configblock.innerHTML ="";
 
 
     state="Home"
     subnavprimary.style.display = "none";
     subnavsecoundary.style.display = "none";
+    console.log("welcome home")
+    displayHomeSection();
 
 }
 
 appdata.onclick =  (e) => {
 state="AppDaten"
+configblock.innerHTML ="";
+
 subnavprimary.style.display = "block";
 subnavsecoundary.style.display = "none";
 
@@ -119,6 +117,7 @@ xmlHttp.onload = function() {
     const data = JSON.parse(xmlHttp.responseText)
     appdataInstalledApps = data;
     
+    if(!data.list) return;
     for(var i=0;i<data.list.length;i++){
     
     const li = document.createElement("li");
@@ -147,6 +146,8 @@ xmlHttp.onload = function() {
 
 
 settings.onclick = (e) => {
+    configblock.innerHTML ="";
+
     state="Settings".
     subnavprimary.style.display = "none";
     subnavsecoundary.style.display = "none";
@@ -241,6 +242,8 @@ generateSubNavSecoundaryAppData();
 }
 
 devices.onclick  = (e) => {
+    configblock.innerHTML ="";
+
     state="Devices"
     subnavprimary.style.display = "none";
     subnavsecoundary.style.display = "none";
@@ -483,11 +486,12 @@ function displayHomeSection() {
     xmlHttp_accinfo.onload = function()  {  
       const accInfo =  JSON.parse(xmlHttp_accinfo.responseText);
       hello.innerText = timegreeting()+" "+accInfo.name+"!";
+      console.log(accInfo)
   }
   xmlHttp_accinfo.send( null );
 
   configblock.insertAdjacentElement('beforeend',hello)
-
+  console.log("inserted")
 }
 
 
