@@ -147,11 +147,9 @@ xmlHttp.onload = function() {
 
 settings.onclick = (e) => {
     configblock.innerHTML ="";
-
-    state="Settings".
+    state="Settings";
     subnavprimary.style.display = "none";
     subnavsecoundary.style.display = "none";
-
 
 
 }
@@ -272,7 +270,7 @@ function loadAppConfig() {
 
         lastLoadingAnimationSecoundary.style.display = "none"
         var data=appdataInstalledApps.list[primarySelectionIndex].config.settings;
-        
+        if(data) {
         for(var i=0;i<data.length;i++){
             var currentConfig
             if(currentUserAppData.config[data[i].targetName]!=undefined){
@@ -308,7 +306,7 @@ function loadAppConfig() {
             configblock.insertAdjacentElement('beforeend',currentParamContainer);
 
         }
-
+    }
    generateButtonsForScore();
 
 
