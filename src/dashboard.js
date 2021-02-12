@@ -35,6 +35,7 @@ var lastLoadingAnimationSecoundary;
 $(document).on('click', '.menubar > li', function (e) {
                 $('a.activeLink').removeClass('activeLink');
                 $(this).children('a').addClass('activeLink');
+                configblock.innerHTML ="";
     e.preventDefault();
 });
 
@@ -116,7 +117,7 @@ xmlHttp.onload = function() {
     const li = document.createElement("li");
     const a = document.createElement("a");
     const img = document.createElement("img");
-    img.src = "loading.svg";
+    img.src = "assets/loading.svg";
     img.width = 20;
     img.height = 20;
     img.style.marginBottom = "-4px";
@@ -133,11 +134,6 @@ xmlHttp.onload = function() {
     
     
 }
-
-
-
-
-
 
 }
 
@@ -158,8 +154,10 @@ settings.onclick = (e) => {
     xmlHttp_getScores.open( "GET", url, true);
     xmlHttp_getScores.send(null);
     subnavsecoundary.innerHTML="";
-    subnavsecoundary.style.display = "none";
+    //subnavsecoundary.style.display = "none";
 
+
+    configblock.innerHTML ="";
 
 xmlHttp_getScores.onload = function() {
     subnavsecoundary.innerHTML="";
@@ -175,7 +173,7 @@ xmlHttp_getScores.onload = function() {
         generateSecoundary(d.read[i].name)
         
     }
-    subnavsecoundary.style.display = "block";
+    //subnavsecoundary.style.display = "block";
     lastLoadingAnimation.style.display = "none";
 
 
@@ -191,7 +189,7 @@ function generateSecoundary(content) {
     a.innerText = content;
 
     const img = document.createElement("img");
-    img.src = "loading.svg";
+    img.src = "assets/loading.svg";
     img.width = 20;
     img.height = 20;
     img.style.marginBottom = "-4px";
@@ -301,7 +299,7 @@ function loadAppConfig() {
 
         }
 
-   generateApplyButtonForScore();
+   generateButtonsForScore();
 
 
 }
@@ -416,7 +414,7 @@ function createParam_switch(currentParam,targetname){
 }
 
 
-function generateApplyButtonForScore() {
+function generateButtonsForScore() {
     const apply =  document.createElement("button");
     apply.innerText = "Anwenden";
     apply.class = "applyScore";
@@ -436,8 +434,31 @@ function generateApplyButtonForScore() {
 
   }
 
-  configblock.insertAdjacentElement('beforeend',apply);
+  const deleteButton = document.createElement("button");
+  deleteButton.innerText = "Löschen";
+  deleteButton.class = "deleteScore";
 
+  deleteButton.onclick = function() {
+
+    //TODO cray out if you dont have write perms!
+    var delete_url =window.API+"/app/deleteAppScore?session="+window.readCookie("session")+"&scoreuuid="+appdataCurrentScores[secoundarySelectionIndex-1].uuid;
+
+    var xmlHttp_delete = new XMLHttpRequest();
+    xmlHttp_delete.open( "GET", delete_url, true );
+    xmlHttp_delete.onload = function()  {  
+        generateSubNavSecoundaryAppData();
+      console.log(xmlHttp_delete.responseText)
+  }
+  xmlHttp_delete.send( null );
+
+
+
+    }
+
+
+
+  configblock.insertAdjacentElement('beforeend',apply);
+  configblock.insertAdjacentElement('beforeend',deleteButton);
 
 
 }
