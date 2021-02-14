@@ -1,4 +1,6 @@
 
+
+//SESSION CHECKER
 if(window.readCookie("session")=='') {
     window.location.replace("index.html");
 }else{
@@ -13,6 +15,7 @@ if(window.readCookie("session")=='') {
         window.location.replace("index.html");
     
     }
+
 
 var primarySelectionIndex = -1;
 var secoundarySelectionIndex = -1;
@@ -50,18 +53,22 @@ $(document).on('click', '.verticalMenu > li', function (e) {
 
         configblock.innerHTML = "";
 
-    if(state=="AppDaten"){
         $(".currentLoadingPrimary").hide();
         $(".currentLoadingPrimary").removeClass("currentLoadingPrimary")
 
         $(this).children('a').children("img").addClass("currentLoadingPrimary");
         $(this).children('a').children("img")[0].style.display ="block"
         lastLoadingAnimation = $(this).children('a').children("img")[0];
+
+    if(state=="AppDaten"){
+  
         generateSubNavSecoundaryAppData();
-   
-        
+        subnavsecoundary.style.display = "block";
+    }else if(state=="Settings") {
+
+        generateSettingPage(primarySelectionIndex);
+
     }
-    subnavsecoundary.style.display = "block";
 
 }else{
 
@@ -99,7 +106,11 @@ home.onclick= (e) => {
 
 }
 
+
+
+
 appdata.onclick =  (e) => {
+
 state="AppDaten"
 configblock.innerHTML ="";
 
@@ -148,9 +159,33 @@ xmlHttp.onload = function() {
 settings.onclick = (e) => {
     configblock.innerHTML ="";
     state="Settings";
-    subnavprimary.style.display = "none";
+    subnavprimary.style.display = "block";
+    subnavprimary.innerHTML = "";
     subnavsecoundary.style.display = "none";
 
+
+    generateSubNavPrimary("API Keys");
+    
+
+
+}
+
+function generateSubNavPrimary(name) {
+
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    const img = document.createElement("img");
+    img.src = "assets/loading.svg";
+    img.width = 20;
+    img.height = 20;
+    img.style.marginBottom = "-4px";
+    img.style.float = "right";
+    img.class = "loadingAni"
+    img.style.display = "none";
+    a.innerText = name;
+    li.insertAdjacentElement('beforeend',a);
+    a.insertAdjacentElement('beforeend',img);
+    subnavprimary.insertAdjacentElement('beforeend',li);
 
 }
 
@@ -509,5 +544,11 @@ const hour = time.getHours();
         return "Guten Morgen";
     }
 
+
+}
+
+function generateSettingPage(psi) {
+
+    lastLoadingAnimation.style.display = "none";
 
 }
