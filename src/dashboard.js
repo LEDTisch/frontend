@@ -1,5 +1,4 @@
 
-
 function checkSession() {
     //SESSION CHECKER
 if(window.readCookie("session")=='') {
@@ -44,6 +43,7 @@ displayHomeSection();
 $(document).on('click', '.menubar > li', function (e) {
                 $('a.activeLink').removeClass('activeLink');
                 $(this).children('a').addClass('activeLink');
+                checkSession();
 });
 
 
@@ -358,7 +358,7 @@ function loadAppConfig() {
 
 
     if(appdataCurrentScores[secoundarySelectionIndex-1].readonly) {
-        $("#config *:not(.removescoreaccess)").prop("disabled", true); //TODO not doesnt work!
+        $("#config *").not(".removescoreaccess").prop("disabled", true); //TODO not doesnt work!
     }
 
 
@@ -477,7 +477,7 @@ function createParam_switch(currentParam,targetname){
 function generateButtonsForScore() {
     const apply =  document.createElement("button");
     apply.innerText = "Anwenden";
-    apply.class = "applyScore";
+    apply.classList.add("applyScore");
     apply.onclick = function() {
 
         console.log(JSON.stringify(currentUserAppData.config))
@@ -496,7 +496,7 @@ function generateButtonsForScore() {
 
   const deleteButton = document.createElement("button");
   deleteButton.innerText = "Löschen";
-  deleteButton.class = "deleteScore";
+  deleteButton.classList.add("deleteScore")
 
   deleteButton.onclick = function() {
 
@@ -513,21 +513,21 @@ function generateButtonsForScore() {
 
 
   const deleteaccessButton = document.createElement("button");
-  deleteaccessButton.innerText = "Meine Zugriff löschen";
-  deleteaccessButton.class = "removescoreaccess";
+  deleteaccessButton.innerText = "Meinen Zugriff löschen";
+  deleteaccessButton.classList.add("removescoreaccess");
 
   deleteaccessButton.onclick = function() {
 
     //TODO cray out if you dont have write perms!
-    var deleteaccessButton_url =window.API+"/app/deleteAppScore?session="+window.readCookie("session")+"&scoreuuid="+appdataCurrentScores[secoundarySelectionIndex-1].uuid;
+    var deleteaccessButton_url =window.API+"/app/removeReadScore?session="+window.readCookie("session")+"&scoreuuid="+appdataCurrentScores[secoundarySelectionIndex-1].uuid;
 
     var xmlHttp_deleteaccess = new XMLHttpRequest();
-    xmlHttp_deleteaccess.open( "GET", delete_url, true );
+    xmlHttp_deleteaccess.open( "GET", deleteaccessButton_url, true );
     xmlHttp_deleteaccess.onload = function()  {  
         generateSubNavSecoundaryAppData();
       console.log(xmlHttp_deleteaccess.responseText)
   }
-  xmlHttp_deleteaccess.send( null );
+        xmlHttp_deleteaccess.send( null );
 
 
 
@@ -536,6 +536,7 @@ function generateButtonsForScore() {
 
   configblock.insertAdjacentElement('beforeend',apply);
   configblock.insertAdjacentElement('beforeend',deleteButton);
+  if(appdataCurrentScores[secoundarySelectionIndex-1].readonly)
   configblock.insertAdjacentElement('beforeend',deleteaccessButton);
 
 }
