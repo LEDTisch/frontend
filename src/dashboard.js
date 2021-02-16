@@ -1,6 +1,7 @@
 
 
-//SESSION CHECKER
+function checkSession() {
+    //SESSION CHECKER
 if(window.readCookie("session")=='') {
     window.location.replace("index.html");
 }else{
@@ -15,6 +16,9 @@ if(window.readCookie("session")=='') {
         window.location.replace("index.html");
     
     }
+}
+
+checkSession();
 
 
 var primarySelectionIndex = -1;
@@ -210,8 +214,8 @@ xmlHttp_getScores.onload = function() {
         
     }
 
-    for(var i=0;i<d.read.length;i++){//write auflisten permission
-        generateSecoundary(d.read[i].name)
+    for(var i=0;i<d.read.length;i++){//read auflisten permission
+        generateSecoundarySubContent(d.read[i].name,"Read-Only")
         
     }
     //subnavsecoundary.style.display = "block";
@@ -225,8 +229,14 @@ xmlHttp_getScores.onload = function() {
 }
 
 function generateSecoundary(content) {
+    generateSecoundarySubContent(content,"");
+    
+}
+
+function generateSecoundarySubContent(content,subcontent) {
     const li = document.createElement("li");
     const a = document.createElement("a");
+    const subtext = document.createElement("p");
     a.innerText = content;
 
     const img = document.createElement("img");
@@ -237,8 +247,12 @@ function generateSecoundary(content) {
     img.style.float = "right";
     img.class = "loadingAni"
     img.style.display = "none";
+    subtext.innerText = subcontent;
+    subtext.classList.add("subtext");
     a.insertAdjacentElement('beforeend',img);
     li.insertAdjacentElement('beforeend',a);
+    if(subcontent&&subcontent!="")
+    a.insertAdjacentElement('beforeend', subtext);
     subnavsecoundary.insertAdjacentElement('beforeend',li);
 }
 
@@ -295,12 +309,10 @@ function loadAppConfig() {
     var xmlHttp_load = new XMLHttpRequest();
     xmlHttp_load.open( "GET", load_url, true );
     xmlHttp_load.onload = function()  {
-        console.log(xmlHttp_load.responseText);
 
         currentUserAppData=JSON.parse(xmlHttp_load.responseText);
 
         configblock.innerHTML="";
-
 
 
         lastLoadingAnimationSecoundary.style.display = "none"
@@ -343,6 +355,11 @@ function loadAppConfig() {
         }
     }
    generateButtonsForScore();
+
+
+    if(appdataCurrentScores[secoundarySelectionIndex-1].readonly) {
+        $("#config *:not(.removescoreaccess)").prop("disabled", true); //TODO not doesnt work!
+    }
 
 
 }
@@ -483,7 +500,6 @@ function generateButtonsForScore() {
 
   deleteButton.onclick = function() {
 
-    //TODO cray out if you dont have write perms!
     var delete_url =window.API+"/app/deleteAppScore?session="+window.readCookie("session")+"&scoreuuid="+appdataCurrentScores[secoundarySelectionIndex-1].uuid;
 
     var xmlHttp_delete = new XMLHttpRequest();
@@ -493,16 +509,34 @@ function generateButtonsForScore() {
       console.log(xmlHttp_delete.responseText)
   }
   xmlHttp_delete.send( null );
+}
+
+
+  const deleteaccessButton = document.createElement("button");
+  deleteaccessButton.innerText = "Meine Zugriff löschen";
+  deleteaccessButton.class = "removescoreaccess";
+
+  deleteaccessButton.onclick = function() {
+
+    //TODO cray out if you dont have write perms!
+    var deleteaccessButton_url =window.API+"/app/deleteAppScore?session="+window.readCookie("session")+"&scoreuuid="+appdataCurrentScores[secoundarySelectionIndex-1].uuid;
+
+    var xmlHttp_deleteaccess = new XMLHttpRequest();
+    xmlHttp_deleteaccess.open( "GET", delete_url, true );
+    xmlHttp_deleteaccess.onload = function()  {  
+        generateSubNavSecoundaryAppData();
+      console.log(xmlHttp_deleteaccess.responseText)
+  }
+  xmlHttp_deleteaccess.send( null );
+
 
 
 
     }
 
-
-
   configblock.insertAdjacentElement('beforeend',apply);
   configblock.insertAdjacentElement('beforeend',deleteButton);
-
+  configblock.insertAdjacentElement('beforeend',deleteaccessButton);
 
 }
 

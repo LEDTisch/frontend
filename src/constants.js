@@ -1,4 +1,4 @@
- window.API = "http://localhost:8146";
+ window.API = "http://217.160.175.116:8146";
  window.createCookie = function createCookie(name,value,days) {
     if (days) {
         var date = new Date();

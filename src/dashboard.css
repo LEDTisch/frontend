@@ -139,3 +139,10 @@ header{
     margin: 6px;
 
   }
+
+  .subtext {
+
+    margin-top: 1px;
+    font-size: 10px;
+    margin-bottom: -11px;
+  }
