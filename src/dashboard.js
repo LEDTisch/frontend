@@ -1,29 +1,16 @@
 
-function checkSession() {
-    //SESSION CHECKER
-if(window.readCookie("session")=='') {
-    window.location.replace("index.html");
-}else{
 
-    const url = `${window.API}/auth/validateSession?session=${window.readCookie("session")}`;
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", url, false ); // false for synchronous request
-    xmlHttp.send( null );
-    console.log(xmlHttp.responseText);
-    
-    if(JSON.parse(xmlHttp.responseText).result !="yes")
-        window.location.replace("index.html");
-    
-    }
-}
+window.checkSession();
 
-checkSession();
 
 
 var primarySelectionIndex = -1;
 var secoundarySelectionIndex = -1;
 var appdataInstalledApps;
 var appdataCurrentScores;
+
+var deviceAvailable;
+var selectedDeviceGroup;
 
 const subnavprimary = document.getElementById("subnavprimary");
 const subnavsecoundary = document.getElementById("subnavsecoundary")
@@ -72,6 +59,11 @@ $(document).on('click', '.verticalMenu > li', function (e) {
 
         generateSettingPage(primarySelectionIndex);
 
+    }else if(state=="Devices") {
+
+        subnavsecoundary.style.display = "block";
+        generateSubNavSecoundaryDevice();
+
     }
 
 }else{
@@ -87,10 +79,13 @@ $(document).on('click', '.verticalMenu > li', function (e) {
         lastLoadingAnimationSecoundary = $(this).children('a').children("img")[0]
 
         loadAppConfig();
+    }else if(state=="Devices") {
 
 
-        
+        generateSubNavSecoundaryDevice();
+
     }
+
 
 }
 
@@ -129,6 +124,7 @@ var xmlHttp = new XMLHttpRequest();
 xmlHttp.open( "GET", url, true ); 
 xmlHttp.send( null );
 xmlHttp.onload = function() {
+
     const data = JSON.parse(xmlHttp.responseText)
     appdataInstalledApps = data;
     
@@ -155,6 +151,50 @@ xmlHttp.onload = function() {
     
     
 }
+
+}
+
+
+devices.onclick  = (e) => {
+    configblock.innerHTML ="";
+    subnavprimary.innerHTML ="";
+    state="Devices"
+    subnavprimary.style.display = "block";
+    subnavsecoundary.style.display = "none";
+
+    const url =window.API+"/device/listAvailable?session="+window.readCookie("session");
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", url, true ); 
+    xmlHttp.send( null );
+    xmlHttp.onload = function() {
+        generateAddDeviceButton();
+
+        const data = JSON.parse(xmlHttp.responseText)
+        deviceAvailable = data;
+        if(!data.data) return;
+        for(var i=0;i<data.data.length;i++){
+        
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        const img = document.createElement("img");
+        img.src = "assets/loading.svg";
+        img.width = 20;
+        img.height = 20;
+        img.style.marginBottom = "-4px";
+        img.style.float = "right";
+        img.class = "loadingAni"
+        img.style.display = "none";
+        a.innerText = data.data[i].name;
+        li.insertAdjacentElement('beforeend',a);
+        a.insertAdjacentElement('beforeend',img);
+        subnavprimary.insertAdjacentElement('beforeend',li);
+        
+        
+        }
+        
+        
+    }
+
 
 }
 
@@ -228,6 +268,36 @@ xmlHttp_getScores.onload = function() {
 
 }
 
+
+function generateSubNavSecoundaryDevice() {
+    console.log(primarySelectionIndex)
+    const url=window.API+"/device/listSpecificUserDevice?session="+window.readCookie("session")+"&device="+deviceAvailable.data[primarySelectionIndex-1].UUID;
+    var xmlHttp_getScores=new XMLHttpRequest();
+    xmlHttp_getScores.open( "GET", url, true);
+    xmlHttp_getScores.send(null);
+    subnavsecoundary.innerHTML="";
+
+
+    configblock.innerHTML ="";
+
+xmlHttp_getScores.onload = function() {
+    subnavsecoundary.innerHTML="";
+
+    console.log(xmlHttp_getScores.responseText)
+    const d=JSON.parse(xmlHttp_getScores.responseText);
+    if(!d.data) return;
+   
+    for(var i=0;i<d.data.length;i++){//write auflisten permission
+        generateSecoundary(d.data[i].name)
+        
+    }
+    //subnavsecoundary.style.display = "block";
+    lastLoadingAnimation.style.display = "none";
+
+}
+
+}
+
 function generateSecoundary(content) {
     generateSecoundarySubContent(content,"");
     
@@ -256,7 +326,7 @@ function generateSecoundarySubContent(content,subcontent) {
     subnavsecoundary.insertAdjacentElement('beforeend',li);
 }
 
-function generateCreateNew() {
+function generateCreateNewAppData() {
     const div=document.createElement("div");
 const ti=document.createElement("input");
 const button=document.createElement("button");
@@ -266,6 +336,7 @@ ti.id="scorenameinput"
 ti.placeholder="Name"
 button.id="buttonaddscore"
 button.innerText="Hinzufügen"
+
 div.insertAdjacentElement('beforeend',ti);
 div.insertAdjacentElement('beforeend',button);
 subnavsecoundary.insertAdjacentElement('beforeend',div);
@@ -288,15 +359,26 @@ generateSubNavSecoundaryAppData();
 }
 }
 
-devices.onclick  = (e) => {
-    configblock.innerHTML ="";
 
-    state="Devices"
-    subnavprimary.style.display = "none";
-    subnavsecoundary.style.display = "none";
+function generateAddDeviceButton() {
+    const div=document.createElement("div");
+const button=document.createElement("button");
+div.id="scorenamediv"
+
+button.id="buttonaddscore"
+button.innerText="Hinzufügen"
+
+div.insertAdjacentElement('beforeend',button);
+subnavprimary.insertAdjacentElement('beforeend',div);
+button.onclick = (e) => {
+
+console.log("Add Device")
+//TODO @FELIX
 
 
 }
+}
+
 
 
 var currentUserAppData;
@@ -358,7 +440,7 @@ function loadAppConfig() {
 
 
     if(appdataCurrentScores[secoundarySelectionIndex-1].readonly) {
-        $("#config *").not(".removescoreaccess").prop("disabled", true); //TODO not doesnt work!
+        $("#config *").not(".removescoreaccess").prop("disabled", true); 
     }
 
 
@@ -518,9 +600,12 @@ function generateButtonsForScore() {
 
   deleteaccessButton.onclick = function() {
 
-    //TODO cray out if you dont have write perms!
-    var deleteaccessButton_url =window.API+"/app/removeReadScore?session="+window.readCookie("session")+"&scoreuuid="+appdataCurrentScores[secoundarySelectionIndex-1].uuid;
-
+    var deleteaccessButton_url;
+    if(appdataCurrentScores[secoundarySelectionIndex-1].readonly){
+         deleteaccessButton_url =window.API+"/app/removeReadScore?session="+window.readCookie("session")+"&scoreuuid="+appdataCurrentScores[secoundarySelectionIndex-1].uuid;
+    }else{
+        deleteaccessButton_url =window.API+"/app/removeWriteScore?session="+window.readCookie("session")+"&scoreuuid="+appdataCurrentScores[secoundarySelectionIndex-1].uuid;
+    }
     var xmlHttp_deleteaccess = new XMLHttpRequest();
     xmlHttp_deleteaccess.open( "GET", deleteaccessButton_url, true );
     xmlHttp_deleteaccess.onload = function()  {  
@@ -536,7 +621,6 @@ function generateButtonsForScore() {
 
   configblock.insertAdjacentElement('beforeend',apply);
   configblock.insertAdjacentElement('beforeend',deleteButton);
-  if(appdataCurrentScores[secoundarySelectionIndex-1].readonly)
   configblock.insertAdjacentElement('beforeend',deleteaccessButton);
 
 }
