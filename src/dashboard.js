@@ -19,6 +19,7 @@ const settings = document.getElementById("settings");
 const devices = document.getElementById("devices")
 const home = document.getElementById("home")
 const configblock = document.getElementById("config");
+const dialog = document.getElementById("dialog");
 var state="None";
 
 
@@ -80,9 +81,14 @@ $(document).on('click', '.verticalMenu > li', function (e) {
 
         loadAppConfig();
     }else if(state=="Devices") {
+        $(".currentLoading").hide();
+        $(".currentLoading").removeClass("currentLoading")
 
+        $(this).children('a').children("img").addClass("currentLoading");
+        $(this).children('a').children("img")[0].style.display ="block"
+        lastLoadingAnimationSecoundary = $(this).children('a').children("img")[0]
 
-        generateSubNavSecoundaryDevice();
+        loadDeviceConfig();
 
     }
 
@@ -246,7 +252,7 @@ function generateSubNavPrimary(name) {
 
 xmlHttp_getScores.onload = function() {
     subnavsecoundary.innerHTML="";
-    generateCreateNew();
+    generateCreateNewAppData();
     const d=JSON.parse(xmlHttp_getScores.responseText);
    
     for(var i=0;i<d.write.length;i++){//write auflisten permission
@@ -286,6 +292,7 @@ xmlHttp_getScores.onload = function() {
     console.log(xmlHttp_getScores.responseText)
     const d=JSON.parse(xmlHttp_getScores.responseText);
     if(!d.data) return;
+    selectedDeviceGroup = d;
    
     for(var i=0;i<d.data.length;i++){//write auflisten permission
         generateSecoundary(d.data[i].name)
@@ -373,8 +380,15 @@ subnavprimary.insertAdjacentElement('beforeend',div);
 button.onclick = (e) => {
 
 console.log("Add Device")
-//TODO @FELIX
 
+//            X X X X X X
+//----------------ODER----------------
+ //           Code eingeben: _______
+
+
+//TODO @FELIX
+dialog.innerHTML="";
+document.crea
 
 }
 }
@@ -418,16 +432,16 @@ function loadAppConfig() {
 
 
             if(data[i].type=="integer"){
-                createParam_Integer(currentConfig,data[i].targetName);
+                createParam_Integer(currentConfig,data[i].targetName,currentUserAppData.config);
             }
             if(data[i].type=="color"){
-                createParam_color(currentConfig,data[i].targetName);
+                createParam_color(currentConfig,data[i].targetName,currentUserAppData.config);
             }
             if(data[i].type=="text"){
-                createParam_Text(currentConfig,data[i].targetName);
+                createParam_Text(currentConfig,data[i].targetName,currentUserAppData.config);
             }
             if(data[i].type=="switch"){
-                createParam_switch(currentConfig,data[i].targetName);
+                createParam_switch(currentConfig,data[i].targetName,currentUserAppData.config);
             }
 
             createParamDescription(data[i].description);
@@ -448,6 +462,72 @@ function loadAppConfig() {
     
     xmlHttp_load.send( null );
     
+
+}
+
+var currentDeviceData;
+function loadDeviceConfig() {
+    configblock.innerHTML="";
+    var load_url =window.API+"/device/getDeviceConfig?session="+window.readCookie("session")+"&device="+selectedDeviceGroup.data[secoundarySelectionIndex].uuid;
+    
+    var xmlHttp_load = new XMLHttpRequest();
+    xmlHttp_load.open( "GET", load_url, true );
+    xmlHttp_load.onload = function()  {
+
+        currentDeviceData=JSON.parse(JSON.parse(xmlHttp_load.responseText).data);
+
+        console.log(currentDeviceData)
+
+        configblock.innerHTML="";
+
+      
+
+        lastLoadingAnimationSecoundary.style.display = "none"
+        var data=JSON.parse(deviceAvailable.data[primarySelectionIndex-1].config).settings;
+        if(data) {
+        for(var i=0;i<data.length;i++){
+            var currentConfig
+            if(currentDeviceData[data[i].targetName]!=undefined){
+                 currentConfig = currentDeviceData[data[i].targetName];
+            }else{
+                currentConfig = data[i].default;
+            }
+
+          
+             currentParamContainer = document.createElement("div");
+             currentParamContainer.classList.add("paramContainer")  
+            
+
+            createParamName(data[i].displayname);
+
+
+            if(data[i].type=="integer"){
+                createParam_Integer(currentConfig,data[i].targetName,currentDeviceData);
+            }
+            if(data[i].type=="color"){
+                createParam_color(currentConfig,data[i].targetName,currentDeviceData);
+            }
+            if(data[i].type=="text"){
+                createParam_Text(currentConfig,data[i].targetName,currentDeviceData);
+            }
+            if(data[i].type=="switch"){
+                createParam_switch(currentConfig,data[i].targetName,currentDeviceData);
+            }
+
+            createParamDescription(data[i].description);
+
+            configblock.insertAdjacentElement('beforeend',currentParamContainer);
+
+        }
+    }
+   generateButtonsForDevice();
+
+
+
+}
+    
+    xmlHttp_load.send( null );
+
 
 }
 
@@ -474,7 +554,7 @@ function createParamDescription(text) {
 }
 
 
-function createParam_Text(defaultparam,targetname){
+function createParam_Text(defaultparam,targetname,variable){
     const div=document.createElement("div");
     const input=document.createElement("input");
 
@@ -486,7 +566,7 @@ function createParam_Text(defaultparam,targetname){
     input.class="integerinput"
     input.value=defaultparam
     input.onchange = function () {
-        currentUserAppData.config[targetname] =input.value;
+        variable[targetname] =input.value;
     }
 
 
@@ -494,7 +574,7 @@ function createParam_Text(defaultparam,targetname){
 
     currentParamContainer.insertAdjacentElement('beforeend',div)
 }
-function createParam_Integer(defaultparam,targetname){
+function createParam_Integer(defaultparam,targetname,variable){
     const div=document.createElement("div");
     const input=document.createElement("input");
 
@@ -503,7 +583,7 @@ function createParam_Integer(defaultparam,targetname){
     input.class="integerinput"
     input.value=defaultparam
     input.onchange = function () {
-        currentUserAppData.config[targetname] =input.value;
+        variable[targetname] =input.value;
     }
 
 
@@ -512,7 +592,7 @@ function createParam_Integer(defaultparam,targetname){
 
     currentParamContainer.insertAdjacentElement('beforeend',div)
 }
-function createParam_color(currentParam,targetname){
+function createParam_color(currentParam,targetname,variable){
     const div=document.createElement("div");
     const input=document.createElement("input");
 
@@ -525,7 +605,7 @@ function createParam_color(currentParam,targetname){
     input.value = currentParam;
   
     input.onchange = function () {
-        currentUserAppData.config[targetname] =input.value;
+        variable[targetname] =input.value;
     }
 
 
@@ -534,7 +614,7 @@ function createParam_color(currentParam,targetname){
     currentParamContainer.insertAdjacentElement('beforeend',div)
 
 }
-function createParam_switch(currentParam,targetname){
+function createParam_switch(currentParam,targetname,variable){
     const div=document.createElement("div");
 
     const toggle=document.createElement("div");
@@ -622,6 +702,48 @@ function generateButtonsForScore() {
   configblock.insertAdjacentElement('beforeend',apply);
   configblock.insertAdjacentElement('beforeend',deleteButton);
   configblock.insertAdjacentElement('beforeend',deleteaccessButton);
+
+}
+
+
+function generateButtonsForDevice() {
+    const apply =  document.createElement("button");
+    apply.innerText = "Anwenden";
+    apply.classList.add("applyScore");
+
+    apply.onclick = function() {
+
+      var save_url =window.API+"/device/saveConfig?session="+window.readCookie("session")+"&params="+encodeURIComponent(JSON.stringify(currentDeviceData))+"&deviceuuid="+selectedDeviceGroup.data[secoundarySelectionIndex].uuid;
+
+      var xmlHttp_save = new XMLHttpRequest();
+      xmlHttp_save.open( "GET", save_url, true );
+      xmlHttp_save.onload = function()  {  
+    
+        console.log(xmlHttp_save.responseText)
+    }
+    xmlHttp_save.send( null );
+
+  }
+
+  const deleteButton = document.createElement("button");
+  deleteButton.innerText = "Gerät trennen";
+  deleteButton.classList.add("deleteScore")
+
+  deleteButton.onclick = function() {
+
+    var delete_url =window.API+"/device/deleteDevice?session="+window.readCookie("session")+"&deviceuuid="+selectedDeviceGroup.data[secoundarySelectionIndex].uuid;
+
+    var xmlHttp_delete = new XMLHttpRequest();
+    xmlHttp_delete.open( "GET", delete_url, true );
+    xmlHttp_delete.onload = function()  {  
+        generateSubNavSecoundaryAppData();
+      console.log(xmlHttp_delete.responseText)
+  }
+  xmlHttp_delete.send( null );
+}
+
+  configblock.insertAdjacentElement('beforeend',apply);
+  configblock.insertAdjacentElement('beforeend',deleteButton);
 
 }
 
