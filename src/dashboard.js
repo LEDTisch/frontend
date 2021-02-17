@@ -20,6 +20,7 @@ const devices = document.getElementById("devices")
 const home = document.getElementById("home")
 const configblock = document.getElementById("config");
 const dialog = document.getElementById("dialog");
+dialog.style.display = "none";
 var state="None";
 
 
@@ -386,9 +387,133 @@ console.log("Add Device")
  //           Code eingeben: _______
 
 
-//TODO @FELIX
+//TODO @ft
+dialog.style.display = "grid";
 dialog.innerHTML="";
-document.crea
+dialog.innerHTML = ` 
+<input type="number"  placeholder="Code" id="codeUserInput" max="16383"></input>
+<button id="registerNewDevice">Verbinden</button>
+<div id="colorcodeselectorbox">
+<div class="colorclicker"></div>
+<div class="colorclicker"></div>
+<div class="colorclicker"></div>
+<div class="colorclicker"></div>
+<div class="colorclicker"></div>
+<div class="colorclicker"></div>
+<div class="colorclicker"></div>
+</div>
+<p id="errorlable">testerror</p>
+<a id="closeDialog" href="#">Schließen</a>
+ `;
+
+ var deviceRegCode=0;
+
+ const registerNewDevice = document.getElementById("registerNewDevice")
+ registerNewDevice.onclick=function(){
+    var load_url =window.API+"/device/registerByCode?regCode="+deviceRegCode+"&session="+window.readCookie("session");
+    var xmlHttp_load = new XMLHttpRequest();
+    xmlHttp_load.open( "GET", load_url, true );
+    xmlHttp_load.onload = function()  {
+        console.log(xmlHttp_load.responseText);
+        var res=JSON.parse(xmlHttp_load.responseText);
+        document.
+    }
+    xmlHttp_load.send(null);
+
+
+ }
+  
+const closeTag = document.getElementById("closeDialog");
+closeTag.onclick = function() {
+    
+    dialog.style.display = "none";
+    dialog.innerHTML="";
+
+}
+
+const codeUserInput = document.getElementById("codeUserInput"); 
+
+
+
+codeUserInput.oninput = function() {
+    if(codeUserInput.value>16383) codeUserInput.value = 16383;
+    if(codeUserInput.value<0) codeUserInput.value = 0;
+    codeUserInput.value = codeUserInput.value*1;
+    if(codeUserInput.value==0) codeUserInput.value = "";
+    deviceRegCode = codeUserInput.value;
+    var codeUserInputcounter =0;
+    $(".colorclicker").parent().children().each(function(i) {
+        var currentColorIterator = (deviceRegCode>>codeUserInputcounter)&0x03;
+        console.log(deviceRegCode)
+        switch (currentColorIterator){
+            case 0:{
+                $(this).css("background-color","rgb(255, 255, 255)")
+                break;
+            }
+            case 1:{
+                $(this).css("background-color","rgb(255, 0, 0)")
+                break;
+            }
+            case 2:{
+            $(this).css("background-color","rgb(0, 255, 0)")
+            break;
+            }
+            
+            case 3:{
+                $(this).css("background-color","rgb(0, 0, 255)")
+                break;
+            }
+            
+        }
+        codeUserInputcounter+=2;
+    })
+
+
+}
+
+
+
+ $(".colorclicker").click(function(){
+
+    var color = $(this).css("background-color");
+
+    if(color=="rgb(255, 0, 0)") {
+        $(this).css("background-color","rgb(0, 255, 0)")
+    }else if(color=="rgb(0, 255, 0)") {
+        $(this).css("background-color","rgb(0, 0, 255)") 
+    }else if(color=="rgb(0, 0, 255)") {
+        $(this).css("background-color","rgb(255, 255, 255)") 
+    }else{
+        $(this).css("background-color","rgb(255, 0, 0)") 
+
+    }
+    var j=0;
+     deviceRegCode=0;
+    $(this).parent().children().each(function(i) {
+
+        
+        if($(this).css("background-color")=="rgb(255, 255, 255)"){
+            deviceRegCode = deviceRegCode | (0x00<<j);
+        }
+        if($(this).css("background-color")=="rgb(255, 0, 0)"){
+            deviceRegCode = deviceRegCode | (0x01<<j);
+
+        }
+        if($(this).css("background-color")=="rgb(0, 255, 0)"){
+            deviceRegCode = deviceRegCode | (0x02<<j);
+
+        }
+        if($(this).css("background-color")=="rgb(0, 0, 255)"){
+            deviceRegCode = deviceRegCode | (0x03<<j);
+
+        }
+        
+        j=j+2;
+    })
+    codeUserInput.value = deviceRegCode;
+ })
+
+
 
 }
 }
@@ -736,7 +861,7 @@ function generateButtonsForDevice() {
     var xmlHttp_delete = new XMLHttpRequest();
     xmlHttp_delete.open( "GET", delete_url, true );
     xmlHttp_delete.onload = function()  {  
-        generateSubNavSecoundaryAppData();
+        generateSubNavSecoundaryDevice();
       console.log(xmlHttp_delete.responseText)
   }
   xmlHttp_delete.send( null );
