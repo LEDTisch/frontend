@@ -394,15 +394,15 @@ dialog.innerHTML = `
 <input type="number"  placeholder="Code" id="codeUserInput" max="16383"></input>
 <button id="registerNewDevice">Verbinden</button>
 <div id="colorcodeselectorbox">
-<div class="colorclicker"></div>
-<div class="colorclicker"></div>
-<div class="colorclicker"></div>
-<div class="colorclicker"></div>
-<div class="colorclicker"></div>
-<div class="colorclicker"></div>
-<div class="colorclicker"></div>
+<div color="red" class="colorclicker"></div>
+<div color="red" class="colorclicker"></div>
+<div color="red" class="colorclicker"></div>
+<div color="red" class="colorclicker"></div>
+<div color="red" class="colorclicker"></div>
+<div color="red" class="colorclicker"></div>
+<div color="red" class="colorclicker"></div>
 </div>
-<p id="errorlable">testerror</p>
+<p id="errorlable"> </p>
 <a id="closeDialog" href="#">Schließen</a>
  `;
 
@@ -416,7 +416,15 @@ dialog.innerHTML = `
     xmlHttp_load.onload = function()  {
         console.log(xmlHttp_load.responseText);
         var res=JSON.parse(xmlHttp_load.responseText);
-        document.
+
+        if(res.error!=undefined){
+            console.log(res.error);
+            document.getElementById("errorlable").innerText="";
+            document.getElementById("errorlable").innerText=res.error;
+        }else{
+            dialog.style.display = "none";
+            generateSubNavSecoundaryDevice();
+        }
     }
     xmlHttp_load.send(null);
 
@@ -448,19 +456,24 @@ codeUserInput.oninput = function() {
         switch (currentColorIterator){
             case 0:{
                 $(this).css("background-color","rgb(255, 255, 255)")
+                $(this).attr("color","white")
                 break;
             }
             case 1:{
                 $(this).css("background-color","rgb(255, 0, 0)")
+                $(this).attr("color","red")
                 break;
             }
             case 2:{
             $(this).css("background-color","rgb(0, 255, 0)")
+            $(this).attr("color","green")
             break;
             }
             
             case 3:{
                 $(this).css("background-color","rgb(0, 0, 255)")
+                $(this).attr("color","blue")
+
                 break;
             }
             
@@ -475,35 +488,42 @@ codeUserInput.oninput = function() {
 
  $(".colorclicker").click(function(){
 
-    var color = $(this).css("background-color");
+    var color = $(this).attr("color");
 
-    if(color=="rgb(255, 0, 0)") {
+    if(color=="red") {
         $(this).css("background-color","rgb(0, 255, 0)")
-    }else if(color=="rgb(0, 255, 0)") {
+        $(this).attr("color","green");
+    }else if(color=="green") {
         $(this).css("background-color","rgb(0, 0, 255)") 
-    }else if(color=="rgb(0, 0, 255)") {
+        $(this).attr("color","blue");
+    }else if(color=="blue)") {
         $(this).css("background-color","rgb(255, 255, 255)") 
+        $(this).attr("color","white");
     }else{
         $(this).css("background-color","rgb(255, 0, 0)") 
+        $(this).attr("color","red");
 
     }
     var j=0;
      deviceRegCode=0;
-    $(this).parent().children().each(function(i) {
+     console.clear();
 
+    $("#colorcodeselectorbox").children().each(function(i) {
         
-        if($(this).css("background-color")=="rgb(255, 255, 255)"){
+        console.log($(this).css("background-color"))
+
+        if($(this).attr("color")=="white"){
             deviceRegCode = deviceRegCode | (0x00<<j);
         }
-        if($(this).css("background-color")=="rgb(255, 0, 0)"){
+        if($(this).attr("color")=="red"){
             deviceRegCode = deviceRegCode | (0x01<<j);
 
         }
-        if($(this).css("background-color")=="rgb(0, 255, 0)"){
+        if($(this).attr("color")=="green"){
             deviceRegCode = deviceRegCode | (0x02<<j);
 
         }
-        if($(this).css("background-color")=="rgb(0, 0, 255)"){
+        if($(this).attr("color")=="blue"){
             deviceRegCode = deviceRegCode | (0x03<<j);
 
         }
