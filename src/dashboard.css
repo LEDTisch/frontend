@@ -193,12 +193,12 @@ text-align: center;
         border-color: black;
         border-style: solid;
         border-radius: 3px;
-      /*  transition: all 1s ease 0s; */
+       transition: all 1s ease 0s; 
 
   }
   .colorclicker:hover{
     border-color:  rgb(0, 159, 252);
-     /* transition: all 0.2s ease 0s; */
+      transition: all 0.2s ease 0s; 
 
   }
   #colorcodeselectorbox{
@@ -241,7 +241,7 @@ text-align: center;
         border: none;
         border-radius: 50px;
         cursor: pointer;
-      /* transition: all 0.3s ease 0s; */
+       transition: all 0.3s ease 0s; 
         font-family: sans-serif;
         font-weight: 500;
         font-size: 16px;
@@ -255,4 +255,30 @@ text-align: center;
 
     #closeDialog {
         text-decoration: none;
+    }
+
+    .dot_online {
+
+
+
+        height: 7px;
+        width: 7px;
+        background-color: #2ecc71;
+        border-radius: 50%;
+        display: inline-block;
+        margin-left: 10px;
+        position: absolute;
+        margin-top: 5px;
+
+      }
+
+      .dot_offline {
+        height: 7px;
+        width: 7px;
+        background-color: crimson;
+        border-radius: 50%;
+        display: inline-block;
+        margin-left: 10px;
+        position: absolute;
+        margin-top: 5px;
     }

@@ -33,7 +33,7 @@ if(window.readCookie("session")=='') {
     xmlHttp.send( null );
     console.log(xmlHttp.responseText);
     
-    if(JSON.parse(xmlHttp.responseText).result !="yes")
+    if(!JSON.parse(xmlHttp.responseText).success)
         window.location.replace("index.html");
     
     }

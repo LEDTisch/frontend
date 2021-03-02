@@ -295,8 +295,14 @@ xmlHttp_getScores.onload = function() {
     if(!d.data) return;
     selectedDeviceGroup = d;
    
-    for(var i=0;i<d.data.length;i++){//write auflisten permission
-        generateSecoundary(d.data[i].name)
+    for(var i=0;i<d.data.length;i++){
+
+        if(d.data[i].online==1) {
+            generateSecoundarySubContent(d.data[i].name,"",`<span class="dot_online" title="Online-Status: Online"></span>`)
+        }else{
+            generateSecoundarySubContent(d.data[i].name,"",`<span class="dot_offline" title="Online-Status: Offline"></span>`)
+
+        }
         
     }
     //subnavsecoundary.style.display = "block";
@@ -311,7 +317,7 @@ function generateSecoundary(content) {
     
 }
 
-function generateSecoundarySubContent(content,subcontent) {
+function generateSecoundarySubContent(content,subcontent,customHTML) {
     const li = document.createElement("li");
     const a = document.createElement("a");
     const subtext = document.createElement("p");
@@ -327,6 +333,8 @@ function generateSecoundarySubContent(content,subcontent) {
     img.style.display = "none";
     subtext.innerText = subcontent;
     subtext.classList.add("subtext");
+    if(customHTML)
+        a.insertAdjacentHTML('beforeend',customHTML);
     a.insertAdjacentElement('beforeend',img);
     li.insertAdjacentElement('beforeend',a);
     if(subcontent&&subcontent!="")
@@ -496,7 +504,7 @@ codeUserInput.oninput = function() {
     }else if(color=="green") {
         $(this).css("background-color","rgb(0, 0, 255)") 
         $(this).attr("color","blue");
-    }else if(color=="blue)") {
+    }else if(color=="blue") {
         $(this).css("background-color","rgb(255, 255, 255)") 
         $(this).attr("color","white");
     }else{
