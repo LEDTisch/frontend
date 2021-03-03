@@ -1,5 +1,5 @@
 
-import {createParamName,createParamDescription,createParam_Text,createParam_Integer,createParam_color,createParam_switch} from "./params.js";
+import {createParamName,createParamDescription,createParam_Text,createParam_Integer,createParam_color,createParam_switch,createDropDownList} from "./params.js";
 
 window.checkSession();
 
@@ -618,6 +618,7 @@ function loadAppConfig() {
                 if (data[i].type == "switch") {
                     createParam_switch(currentConfig, data[i].targetName, currentUserAppData.config,currentParamContainer);
                 }
+                
 
                 createParamDescription(data[i].description,currentParamContainer);
 
@@ -649,15 +650,29 @@ function loadDeviceConfig() {
     xmlHttp_load.open("GET", load_url, true);
     xmlHttp_load.onload = function () {
 
+        const load_comApps = window.API + "/device/listinstalledcompatibleapps?session=" + window.readCookie("session")+"&deviceuuid="+selectedDeviceGroup.data[secoundarySelectionIndex - 1].uuid;
+        console.log(load_comApps)
+        var xmlHttp_comApps = new XMLHttpRequest();
+        xmlHttp_comApps.open("GET", load_comApps, true);
+        xmlHttp_comApps.onload = function () {
+
         currentDeviceData = JSON.parse(JSON.parse(xmlHttp_load.responseText).data);
 
-        console.log(currentDeviceData)
+        var comAppsUUID = []
+        var comAppsName = []
+
+
+    
+        JSON.parse(xmlHttp_comApps.responseText).list.forEach(e=> {
+            comAppsUUID.push(e.UUID); comAppsName.push(e.name); console.log(e) 
+        })
 
         configblock.innerHTML = "";
 
 
 
         lastLoadingAnimationSecoundary.style.display = "none"
+        console.log(deviceAvailable.data[primarySelectionIndex - 1].config)
         var data = JSON.parse(deviceAvailable.data[primarySelectionIndex - 1].config).settings;
         if (data) {
             for (var i = 0; i < data.length; i++) {
@@ -688,6 +703,14 @@ function loadDeviceConfig() {
                 if (data[i].type == "switch") {
                     createParam_switch(currentConfig, data[i].targetName,currentDeviceData, currentParamContainer);
                 }
+                if(data[i].type == "applicationselect") {
+
+
+
+                    createDropDownList(currentConfig, data[i].targetName, currentDeviceData,currentParamContainer,comAppsName,comAppsUUID);
+
+                    
+                }
 
                 createParamDescription(data[i].description,currentParamContainer);
 
@@ -699,6 +722,8 @@ function loadDeviceConfig() {
 
 
 
+    }
+    xmlHttp_comApps.send(null);
     }
 
     xmlHttp_load.send(null);

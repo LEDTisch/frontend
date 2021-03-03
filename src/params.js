@@ -94,11 +94,46 @@ export function createParam_switch(currentParam, targetname, variable,currentPar
     toggle.childNodes[0].childNodes[0].checked = currentParam;
 
     toggle.childNodes[0].childNodes[0].onchange = function () {
-        currentUserAppData.config[targetname] = toggle.childNodes[0].childNodes[0].checked;
+        variable[targetname] = toggle.childNodes[0].childNodes[0].checked;
     }
 
 
     div.insertAdjacentElement('beforeend', toggle);
+
+    currentParamContainer.insertAdjacentElement('beforeend', div)
+}
+
+
+export function createDropDownList(currentParam, targetname, variable,currentParamContainer,optionsSelect,targets) {
+    const div = document.createElement("div");
+
+    const dropdown = document.createElement("select");
+
+   
+
+
+    var options = "";
+
+
+    for(let i=0;i<optionsSelect.length;i++) {
+
+        options+=`<option value="${optionsSelect[i]}">${optionsSelect[i]}</option>`
+        console.log(optionsSelect[i])
+    }
+   
+
+    dropdown.innerHTML = options;
+
+
+    dropdown.value = optionsSelect[targets.indexOf(currentParam)];
+
+    dropdown.onchange = function () {
+        variable[targetname] = targets[optionsSelect.indexOf(dropdown.value)];
+        console.log(targets[optionsSelect.indexOf(dropdown.value)])
+    }
+
+
+    div.insertAdjacentElement('beforeend', dropdown);
 
     currentParamContainer.insertAdjacentElement('beforeend', div)
 }
