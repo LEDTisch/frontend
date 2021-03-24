@@ -21,6 +21,8 @@ const devices = document.getElementById("devices")
 const home = document.getElementById("home")
 const configblock = document.getElementById("config");
 const dialog = document.getElementById("dialog");
+const clickblock = document.getElementById("clickblock");
+
 dialog.style.display = "none";
 var state = "None";
 
@@ -415,11 +417,12 @@ function generateAddDeviceButton() {
         //----------------ODER----------------
         //           Code eingeben: _______
 
-
-        //TODO @ft
+        clickblock.style.pointerEvents  = "auto";
+        clickblock.style.opacity = "1"
         dialog.style.display = "grid";
         dialog.innerHTML = "";
         dialog.innerHTML = ` 
+
 <input type="number"  placeholder="Code" id="codeUserInput" max="16383"></input>
 <button id="registerNewDevice">Verbinden</button>
 <div id="colorcodeselectorbox">
@@ -452,6 +455,11 @@ function generateAddDeviceButton() {
                     document.getElementById("errorlable").innerText = res.error;
                 } else {
                     dialog.style.display = "none";
+                    clickblock.style.opacity = "0"
+                    clickblock.style.pointerEvents  = "none";
+                   // clickblock.style.display = "none";
+                   
+                   
                     //generateSubNavSecoundaryDevice(); todo set selection primary
                 }
             }
@@ -464,6 +472,8 @@ function generateAddDeviceButton() {
         closeTag.onclick = function () {
 
             dialog.style.display = "none";
+            clickblock.style.opacity = "0"
+            clickblock.style.pointerEvents  = "none";
             dialog.innerHTML = "";
 
         }
@@ -796,9 +806,27 @@ function generateButtonsForScore() {
 
     }
 
+    const setdefaultButton = document.createElement("button");
+    setdefaultButton.innerText = "Als Standart festlegen";
+    setdefaultButton.classList.add("setasdefault");
+
+    setdefaultButton.onclick = function () {
+        var url_setdefault = window.API + "/app/setDefaultScore?session="+ window.readCookie("session") + "&scoreuuid=" + appdataCurrentScores[secoundarySelectionIndex - 1].uuid;
+
+        var xmlHttp_setdefault = new XMLHttpRequest();
+        xmlHttp_setdefault.open("GET", url_setdefault, true);
+        xmlHttp_setdefault.onload = function () {
+            generateSubNavSecoundaryAppData();
+            console.log(xmlHttp_setdefault.responseText)
+        }
+        xmlHttp_setdefault.send(null);
+    }
+ 
+
     configblock.insertAdjacentElement('beforeend', apply);
     configblock.insertAdjacentElement('beforeend', deleteButton);
     configblock.insertAdjacentElement('beforeend', deleteaccessButton);
+    configblock.insertAdjacentElement('beforeend', setdefaultButton);
 
 }
 

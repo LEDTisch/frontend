@@ -282,3 +282,15 @@ text-align: center;
         position: absolute;
         margin-top: 5px;
     }
+
+    #clickblock {
+        position: absolute; top: 0; left: 0;
+        width: 100%; height: 100%;
+       
+        pointer-events: none;
+        opacity: 0;
+        transition: all 1s ease;
+        background-color: rgba(67, 129, 180, 0.589);
+        backdrop-filter: blur(5px);
+
+    }
