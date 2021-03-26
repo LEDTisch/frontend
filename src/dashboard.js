@@ -32,6 +32,8 @@ var lastLoadingAnimationSecoundary;
 
 displayHomeSection();
 
+setTimeout( checkSession,30000);
+
 $(document).on('click', '.menubar > li', function (e) {
     $('a.activeLink').removeClass('activeLink');
     $(this).children('a').addClass('activeLink');

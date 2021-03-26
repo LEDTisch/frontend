@@ -1,7 +1,6 @@
 const name_email_input = document.getElementById("email_name_input");
 const passwordinput = document.getElementById("passwordinput");
 const signupButton = document.getElementById("submitButton");
-
 signupButton.onclick = function(e) {
     
     const url = `${window.API}/auth/signin?eorn=${email_name_input.value}&password=${passwordinput.value}`;

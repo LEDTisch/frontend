@@ -7,7 +7,7 @@ xmlHttp.open( "GET", url, false ); // false for synchronous request
 xmlHttp.send( null );
 console.log(xmlHttp.responseText);
 
-if(JSON.parse(xmlHttp.responseText).result =="yes")
+if(JSON.parse(xmlHttp.responseText).success ==true)
     window.location.replace("dashboard.html");
 
 }
