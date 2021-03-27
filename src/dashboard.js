@@ -268,6 +268,7 @@ function generateSubNavSecoundaryAppData() {
 
         for (var i = 0; i < d.read.length; i++) {//read auflisten permission
             generateSecoundarySubContent(d.read[i].name, "Read-Only")
+            d.read[i].readonly = true;
 
         }
         //subnavsecoundary.style.display = "block";
@@ -642,7 +643,7 @@ function loadAppConfig() {
 
 
         if (appdataCurrentScores[secoundarySelectionIndex - 1].readonly) {
-            $("#config *").not(".removescoreaccess").prop("disabled", true);
+            $("#config *").not(".removescoreaccess").not(".setasdefault").prop("disabled", true);
         }
 
 
@@ -790,9 +791,13 @@ function generateButtonsForScore() {
     deleteaccessButton.onclick = function () {
 
         var deleteaccessButton_url;
+
         if (appdataCurrentScores[secoundarySelectionIndex - 1].readonly) {
+            console.log(appdataCurrentScores[secoundarySelectionIndex - 1])
             deleteaccessButton_url = window.API + "/app/removeReadScore?session=" + window.readCookie("session") + "&scoreuuid=" + appdataCurrentScores[secoundarySelectionIndex - 1].uuid;
         } else {
+            console.log(appdataCurrentScores[secoundarySelectionIndex - 1])
+
             deleteaccessButton_url = window.API + "/app/removeWriteScore?session=" + window.readCookie("session") + "&scoreuuid=" + appdataCurrentScores[secoundarySelectionIndex - 1].uuid;
         }
         var xmlHttp_deleteaccess = new XMLHttpRequest();
@@ -809,7 +814,7 @@ function generateButtonsForScore() {
     }
 
     const setdefaultButton = document.createElement("button");
-    setdefaultButton.innerText = "Als Standart festlegen";
+    setdefaultButton.innerText = "Zur Verwendung aktivieren";
     setdefaultButton.classList.add("setasdefault");
 
     setdefaultButton.onclick = function () {
