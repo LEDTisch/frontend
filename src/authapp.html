@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>App Authentifizieren</title>
+</head>
+<body>
+
+<button id="allow">Zugriff Erlauben</button>
+
+<script src="./constants.js"></script>
+<script>
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirect_uri = urlParams.get("redirect_uri");
+    const state = urlParams.get("state");
+    if(window.readCookie("state")=='')
+    window.createCookie("state",state,1)
+    if(window.readCookie("redirect_uri")=='')
+        window.createCookie("redirect_uri",redirect_uri,1)
+
+    if(window.readCookie("session")=='') {
+        window.location.replace(`signin.html?redirect=authapp.html`);
+    }else{
+
+        const url = `${window.API}/auth/validateSession?session=${window.readCookie("session")}`;
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", url, true );
+        xmlHttp.onload = function() {
+            console.log(xmlHttp.responseText);
+
+            if(!JSON.parse(xmlHttp.responseText).success)
+                window.location.replace(`signin.html?redirect=authapp.html`);
+            else {
+
+                const allow = document.getElementById("allow");
+                allow.onclick = function() {
+
+
+
+                    const url2 = `${window.API}/auth/addAPIKey?session=${window.readCookie("session")}`;
+                    var xmlHttp2 = new XMLHttpRequest();
+                    xmlHttp2.open( "GET", url2, true );
+                    xmlHttp2.onload = function() {
+                        console.log(`${window.readCookie("redirect_uri")}#state=${window.readCookie("state")}&access_token=${ JSON.parse(xmlHttp2.responseText).success}&token_type=Bearer`)
+                        window.location.replace(`${window.readCookie("redirect_uri")}#state=${window.readCookie("state")}&access_token=${ JSON.parse(xmlHttp2.responseText).success}&token_type=Bearer`);
+                    }
+                    xmlHttp2.send(null)
+
+
+
+
+
+
+                }
+
+            }
+
+        }
+    }
+    xmlHttp.send( null );
+
+</script>
+
+</body>
+</html>

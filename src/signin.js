@@ -12,7 +12,8 @@ signupButton.onclick = function(e) {
 
     if(!JSON.parse(xmlHttp.responseText).error) {
         window.createCookie("session", JSON.parse(xmlHttp.responseText).session,1);
-        window.location.replace("dashboard.html");
+        const urlParams = new URLSearchParams(window.location.search);
+        window.location.replace(urlParams.get('redirect'));
         }else{
             errorlable.innerHTML = JSON.parse(xmlHttp.responseText).error;
         }
