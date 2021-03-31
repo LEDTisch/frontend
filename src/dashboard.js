@@ -32,7 +32,7 @@ var lastLoadingAnimationSecoundary;
 
 displayHomeSection();
 
-setTimeout( checkSession,30000);
+setTimeout( window.checkSession,30000);
 
 $(document).on('click', '.menubar > li', function (e) {
     $('a.activeLink').removeClass('activeLink');
