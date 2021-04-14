@@ -131,7 +131,7 @@ appdata.onclick = (e) => {
     subnavprimary.innerHTML = "";
     subnavsecoundary.innerHTML = "";
 
-    const url = window.API + "/app/listinstalled?session=" + window.readCookie("session");
+    const url = window.API + "/game/app/listinstalled?session=" + window.readCookie("session");
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", url, true);
     xmlHttp.send(null);
@@ -246,7 +246,7 @@ function generateSubNavPrimary(name) {
 }
 
 function generateSubNavSecoundaryAppData() {
-    const url = window.API + "/app/getAppScores?session=" + window.readCookie("session") + "&appuuid=" + appdataInstalledApps.list[primarySelectionIndex].UUID;
+    const url = window.API + "/game/app/getAppScores?session=" + window.readCookie("session") + "&appuuid=" + appdataInstalledApps.list[primarySelectionIndex].UUID;
     var xmlHttp_getScores = new XMLHttpRequest();
     xmlHttp_getScores.open("GET", url, true);
     xmlHttp_getScores.send(null);
@@ -386,7 +386,7 @@ function generateCreateNewAppData() {
 
         if (!(ti.value.length > 3)) return;
 
-        var add_url = window.API + "/app/addScore?session=" + window.readCookie("session") + "&name=" + ti.value + "&appuuid=" + appdataInstalledApps.list[primarySelectionIndex].UUID;
+        var add_url = window.API + "/game/app/addScore?session=" + window.readCookie("session") + "&name=" + ti.value + "&appuuid=" + appdataInstalledApps.list[primarySelectionIndex].UUID;
         console.log(add_url);
 
         var xmlHttp_add = new XMLHttpRequest();
@@ -587,7 +587,7 @@ var currentParamContainer;
 function loadAppConfig() {
 
     configblock.innerHTML = "";
-    var load_url = window.API + "/app/getScoreConfig?session=" + window.readCookie("session") + "&scoreuuid=" + appdataCurrentScores[secoundarySelectionIndex - 1].uuid;
+    var load_url = window.API + "/game/app/getScoreConfig?session=" + window.readCookie("session") + "&scoreuuid=" + appdataCurrentScores[secoundarySelectionIndex - 1].uuid;
 
     var xmlHttp_load = new XMLHttpRequest();
     xmlHttp_load.open("GET", load_url, true);
@@ -754,7 +754,7 @@ function generateButtonsForScore() {
 
         console.log(JSON.stringify(currentUserAppData.config))
 
-        var save_url = window.API + "/app/saveAppScore?session=" + window.readCookie("session") + "&params=" + encodeURIComponent(JSON.stringify(currentUserAppData.config)) + "&scoreuuid=" + appdataCurrentScores[secoundarySelectionIndex - 1].uuid;
+        var save_url = window.API + "/game/app/saveAppScore?session=" + window.readCookie("session") + "&params=" + encodeURIComponent(JSON.stringify(currentUserAppData.config)) + "&scoreuuid=" + appdataCurrentScores[secoundarySelectionIndex - 1].uuid;
 
         var xmlHttp_save = new XMLHttpRequest();
         xmlHttp_save.open("GET", save_url, true);
@@ -772,7 +772,7 @@ function generateButtonsForScore() {
 
     deleteButton.onclick = function () {
 
-        var delete_url = window.API + "/app/deleteAppScore?session=" + window.readCookie("session") + "&scoreuuid=" + appdataCurrentScores[secoundarySelectionIndex - 1].uuid;
+        var delete_url = window.API + "/game/app/deleteAppScore?session=" + window.readCookie("session") + "&scoreuuid=" + appdataCurrentScores[secoundarySelectionIndex - 1].uuid;
 
         var xmlHttp_delete = new XMLHttpRequest();
         xmlHttp_delete.open("GET", delete_url, true);
@@ -794,11 +794,11 @@ function generateButtonsForScore() {
 
         if (appdataCurrentScores[secoundarySelectionIndex - 1].readonly) {
             console.log(appdataCurrentScores[secoundarySelectionIndex - 1])
-            deleteaccessButton_url = window.API + "/app/removeReadScore?session=" + window.readCookie("session") + "&scoreuuid=" + appdataCurrentScores[secoundarySelectionIndex - 1].uuid;
+            deleteaccessButton_url = window.API + "/game/app/removeReadScore?session=" + window.readCookie("session") + "&scoreuuid=" + appdataCurrentScores[secoundarySelectionIndex - 1].uuid;
         } else {
             console.log(appdataCurrentScores[secoundarySelectionIndex - 1])
 
-            deleteaccessButton_url = window.API + "/app/removeWriteScore?session=" + window.readCookie("session") + "&scoreuuid=" + appdataCurrentScores[secoundarySelectionIndex - 1].uuid;
+            deleteaccessButton_url = window.API + "/game/app/removeWriteScore?session=" + window.readCookie("session") + "&scoreuuid=" + appdataCurrentScores[secoundarySelectionIndex - 1].uuid;
         }
         var xmlHttp_deleteaccess = new XMLHttpRequest();
         xmlHttp_deleteaccess.open("GET", deleteaccessButton_url, true);
@@ -818,7 +818,7 @@ function generateButtonsForScore() {
     setdefaultButton.classList.add("setasdefault");
 
     setdefaultButton.onclick = function () {
-        var url_setdefault = window.API + "/app/setDefaultScore?session="+ window.readCookie("session") + "&scoreuuid=" + appdataCurrentScores[secoundarySelectionIndex - 1].uuid;
+        var url_setdefault = window.API + "/game/app/setDefaultScore?session="+ window.readCookie("session") + "&scoreuuid=" + appdataCurrentScores[secoundarySelectionIndex - 1].uuid;
 
         var xmlHttp_setdefault = new XMLHttpRequest();
         xmlHttp_setdefault.open("GET", url_setdefault, true);
