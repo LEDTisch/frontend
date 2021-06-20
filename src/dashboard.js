@@ -4,7 +4,6 @@ import {createParamName,createParamDescription,createParam_Text,createParam_Inte
 window.checkSession();
 
 
-
 var primarySelectionIndex = -1;
 var secoundarySelectionIndex = -1;
 var appdataInstalledApps;
@@ -12,6 +11,7 @@ var appdataCurrentScores;
 
 var deviceAvailable;
 var selectedDeviceGroup;
+
 
 const subnavprimary = document.getElementById("subnavprimary");
 const subnavsecoundary = document.getElementById("subnavsecoundary")

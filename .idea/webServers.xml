@@ -3,9 +3,9 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="f3978d21-fc26-492f-aef0-29dfeb3f9851" name="LEDWall" url="http://217.160.175.116/ledwall/">
-        <fileTransfer rootFolder="/var/www/html/ledwall" accessType="SFTP" host="217.160.175.116" port="22" sshConfigId="ff02b918-e101-40c5-b093-a1a33817c7f3" sshConfig="LEDWall">
+        <fileTransfer rootFolder="/home/ft" accessType="SFTP" host="217.160.175.116" port="22" sshConfigId="455af08a-1160-4e65-ae8b-542ff62f2989" sshConfig="ft@217.160.175.116:22 password">
           <advancedOptions>
-            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
         </fileTransfer>
       </webServer>
